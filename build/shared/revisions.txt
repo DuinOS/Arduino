@@ -1,3 +1,147 @@
+
+[ide]
+* Fixed IDE startup bug "Menu has no enabled items"
+* Command line build.
+* Fixed some language strings (Shigeru KANEMOTO)
+
+[arduino core]
+* sam: portOutputRegister() is now writeable.
+* sam: fixed issue on weak-symbol for some interrupt handlers
+* sam: fixed BSoD on some Windows machine (louismdavis)
+* sam: added CANRX1/CANTX1 pins 88/89 (same physical pin for 66/53)
+
+[libraries]
+* sam: Added Servo library
+
+ARDUINO BETA 1.5.1r2 - 2012.11.06
+
+* Fixed wrong release file for windows.
+
+ARDUINO BETA 1.5.1 - 2012.11.05
+
+* Merged changes coming from stable release of Arduino IDE 1.0.2.
+
+[arduino core]
+* added support for yield() function in Arduino Core. This is a
+  preliminar step for experimenting with cooperative Schedulers.
+
+[ide]
+* Simplified boards menu selection. (new boards.txt file format with
+  custom sub-menus).
+* Fixed "FAT" (multi-platform) library detection. This bug caused
+  many libraries to be detected as 'invalid'.
+
+[sam arduino core]
+* attachInterrupt() and detachInterrupt() are now working.
+* Fixed macros to query low level GPIO registers:
+  digitalPinToBitMask(), digitalPinToTimer(),
+  portOutputRegister, portInputRegister()
+* Fixed analogWrite() on DAC0/1 when writing on both DACs
+  (thanks to smay4finger)
+
+[firmwares]
+* Added firmware for atmega16u2 on Due Board.
+
+ARDUINO BETA 1.5 - 2012.10.22
+
+* First release for the unified IDE for both AVR 8-bit and ARM 32-bit
+  (SAM3 CPUs) architectures.
+* This release include the SAM Arduino Core used in the Arduino Due 
+  Board.
+* Everything is in beta, most features or libraries are still  missing 
+  or incomplete.
+* For more info refer to this press release:
+  http://arduino.cc/blog/2012/10/22/arduino-1-5-support-for-the-due-and-other-processors-easier-library-installation-simplified-board-menu-etc/
+
+ARDUINO 1.0.2 - 2012.11.05
+
+[hardware]
+
+* Added support for the Arduino Micro.
+
+* Added support for the LilyPad Arduino USB.
+
+* For Arduino Mega, having avrdude use "wiring" not "stk500v2" for
+  uploads (to improve auto-reset behavior). 
+  http://code.google.com/p/arduino/issues/detail?id=806
+
+[environment]
+
+* Find-In-Reference now works whether or not text is selected.
+  http://code.google.com/p/arduino/issues/detail?id=940
+
+* Not generating prototypes for functions that already have them.
+  (Lars J. Nielsen).
+  http://code.google.com/p/arduino/issues/detail?id=973
+
+* Improved line numbers for error messages. (Paul Stoffregen)
+  http://code.google.com/p/arduino/issues/detail?id=907
+
+* Automatically create libraries folder in the sketchbook.
+  (Paul Stoffregen)
+  http://code.google.com/p/arduino/issues/detail?id=986
+
+* Tutorial on installing libraries (linked from readme.txt in the
+  libraries folder). (Limor Fried)
+
+* Fix to allow selection of Norwegian. (Rune Fauske)
+
+* Fix to race condition / occasional error in compilation. (gandrewstone)
+  http://code.google.com/p/arduino/issues/detail?id=950
+
+* Don't break long C++ comments during auto-format.
+  http://code.google.com/p/arduino/issues/detail?id=255
+
+[core / libraries]
+
+* Included WiFi library and wifi shield firmware.
+
+* Added ability to specify serial configuration (data bits, stop bits
+  and parity check) in Serial.begin(). (Alarus)
+  http://code.google.com/p/arduino/issues/detail?id=770
+
+* Avoided overruns of the incoming serial (CDC) buffer on the Leonardo.
+  (Peter Van Hoyweghen)
+
+* Avoided auto-reset of the Leonardo when opening serial port after
+  upload without specifying a baud rate. (Peter Van Hoyweghen)
+
+* Fix for tone() on the Leonardo. (Shigeru Kanemoto)
+  http://code.google.com/p/arduino/issues/detail?id=960
+
+* Fix for SD library on Leonardo.
+  http://code.google.com/p/arduino/issues/detail?id=931
+
+* Added other write functions on Leonardo.
+  http://code.google.com/p/arduino/issues/detail?id=958
+
+* Added support for Leonardo interrupts 2 and 3. (Kristian Lauszus)
+
+* Print ovf, inf, or nan accordingly in Serial.print(). (Nick Gammon)
+  http://code.google.com/p/arduino/issues/detail?id=946
+  http://code.google.com/p/arduino/issues/detail?id=961
+  http://code.google.com/p/arduino/issues/detail?id=967
+
+* Fix initialization of SPI data lines. (gandrewstone)
+  http://code.google.com/p/arduino/issues/detail?id=888
+
+* Serial.flush() waits for last byte to transmit. (michele.mazzucchi)
+  http://code.google.com/p/arduino/issues/detail?id=871
+
+* Adding overloads so Serial.write(0) works.
+  http://code.google.com/p/arduino/issues/detail?id=1006
+
+[build]
+
+* Fix Linux arduino script when there are spaces in directory name.
+
+* Pass Linux command line arguments from arduino script through to the
+  Java code. (Allows specifying sketch to open on command line.)
+
+[examples]
+
+* Included examples for the starter kit.
+
 ARDUINO 1.0.1 - 2012.05.21
 
 [environment]

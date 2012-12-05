@@ -23,31 +23,36 @@
  */
 package processing.app.debug;
 
+import static processing.app.I18n._;
+
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import processing.app.helpers.PreferencesMap;
-import processing.core.PApplet;
+import processing.app.tools.MapWithSubkeys;
 
 public class TargetPlatform {
   private String name;
   private File folder;
   private Map<String, PreferencesMap> boards;
-  private List<String> boardsOrder;
   private Map<String, PreferencesMap> programmers;
   private PreferencesMap preferences;
+  private MapWithSubkeys customMenus;
 
   public TargetPlatform(String _name, File _folder) {
     System.out.println("TargetPlatform: constructor start, name: " + _name);
     name = _name;
     folder = _folder;
     boards = new HashMap<String, PreferencesMap>();
-    boardsOrder = new ArrayList<String>();
     programmers = new HashMap<String, PreferencesMap>();
     preferences = new PreferencesMap();
+
+    if (false) {
+      // Hack to extract this word by gettext tool.
+      // This word is actually defined in the "boards.txt".
+      String notused = _("Processor");
+    }
 
     try {
       File boardsFile = new File(_folder, "boards.txt");
@@ -55,9 +60,11 @@ public class TargetPlatform {
         PreferencesMap boardPreferences = new PreferencesMap();
         boardPreferences.load(boardsFile);
         boards = boardPreferences.createFirstLevelMap();
-        boardsOrder = readBoardsOrder(boardsFile);
+        customMenus = MapWithSubkeys.createFrom(boards.get("menu"));
+        boards.remove("menu");
       }
     } catch (Exception e) {
+      e.printStackTrace();
       System.err.println("Error loading boards from boards.txt: " + e);
     }
 
@@ -82,32 +89,6 @@ public class TargetPlatform {
     }
   }
 
-  /**
-   * Loads the ordered list of boards as they appears on the boards.txt file
-   * 
-   * @param boardsFile
-   * @return
-   */
-  private List<String> readBoardsOrder(File boardsFile) {
-    String[] strings = PApplet.loadStrings(boardsFile);
-
-    List<String> res = new ArrayList<String>();
-    String latestBoard = "-";
-    for (String s : strings) {
-      int dot = s.indexOf('.');
-      if (dot == -1)
-        continue;
-      String board = s.substring(0, dot);
-      if (board.equals(latestBoard))
-        continue;
-      if (!boards.containsKey(board))
-        continue;
-      latestBoard = board;
-      res.add(board);
-    }
-    return res;
-  }
-
   public String getName() {
     return name;
   }
@@ -119,9 +100,9 @@ public class TargetPlatform {
   public Map<String, PreferencesMap> getBoards() {
     return boards;
   }
-  
-  public List<String> getOrderedBoards() {
-    return boardsOrder;
+
+  public MapWithSubkeys getCustomMenus() {
+    return customMenus;
   }
 
   public Map<String, PreferencesMap> getProgrammers() {
