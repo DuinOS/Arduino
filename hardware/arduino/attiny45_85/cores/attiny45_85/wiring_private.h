@@ -20,8 +20,6 @@
   Boston, MA  02111-1307  USA
 
   $Id: wiring.h 239 2007-01-12 17:58:39Z mellis $
-
-  Modified 28-08-2009 for attiny84 R.Wiersma
 */
 
 #ifndef WiringPrivate_h
@@ -29,11 +27,10 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <avr/delay.h>
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "wiring.h"
+#include "Arduino.h"
 
 #ifdef __cplusplus
 extern "C"{
@@ -46,10 +43,24 @@ extern "C"{
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
-//Who needs more interrupts?
 #define EXTERNAL_INT_0 0
+#define EXTERNAL_INT_1 1
+#define EXTERNAL_INT_2 2
+#define EXTERNAL_INT_3 3
+#define EXTERNAL_INT_4 4
+#define EXTERNAL_INT_5 5
+#define EXTERNAL_INT_6 6
+#define EXTERNAL_INT_7 7
 
-#define EXTERNAL_NUM_INTERRUPTS 1
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#define EXTERNAL_NUM_INTERRUPTS 8
+#elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644P__)
+#define EXTERNAL_NUM_INTERRUPTS 3
+#elif defined(__AVR_ATmega32U4__)
+#define EXTERNAL_NUM_INTERRUPTS 4
+#else
+#define EXTERNAL_NUM_INTERRUPTS 2
+#endif
 
 typedef void (*voidFuncPtr)(void);
 
