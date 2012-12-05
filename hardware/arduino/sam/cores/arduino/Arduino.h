@@ -39,6 +39,7 @@ extern "C"{
 #define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (SystemCoreClock / 1000L) )
 #define microsecondsToClockCycles(a) ( (a) * (SystemCoreClock / 1000000L) )
 
+void yield(void);
 
 #include "wiring.h"
 #include "wiring_digital.h"
@@ -53,12 +54,12 @@ extern void loop( void ) ;
 // Get the bit location within the hardware port of the given virtual pin.
 // This comes from the pins_*.c file for the active board configuration.
 //
-#define digitalPinToPort(P)        ( g_APinDescription[P]->pPort )
-#define digitalPinToBitMask(P)     ( g_APinDescription[P]->ulPin )
+#define digitalPinToPort(P)        ( g_APinDescription[P].pPort )
+#define digitalPinToBitMask(P)     ( g_APinDescription[P].ulPin )
 #define digitalPinToTimer(P)       (  )
 //#define analogInPinToBit(P)        ( )
-#define portOutputRegister(port)   ( port->PIO_ODSR )
-#define portInputRegister(port)    ( port->PIO_PDSR )
+#define portOutputRegister(port)   ( &(port->PIO_ODSR) )
+#define portInputRegister(port)    ( &(port->PIO_PDSR) )
 //#define portModeRegister(P)        (  )
 
 //#define NOT_A_PIN 0  // defined in pio.h/EPioType

@@ -17,7 +17,6 @@
 */
 
 #include "Arduino.h"
-#include "Reset.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,30 +42,18 @@ uint32_t micros( void )
     return count * 1000 + (SysTick->LOAD + 1 - ticks) / (SystemCoreClock/1000000) ;
 }
 
-void delay( uint32_t dwMs )
+void delay( uint32_t ms )
 {
-	Wait( dwMs ) ;
+    uint32_t end = GetTickCount() + ms;
+    while (GetTickCount() < end)
+    	yield();
 }
 
-void delayMicroseconds( uint32_t dwUs )
+void delayMicroseconds( uint32_t us )
 {
-	uint32_t dwStartMicros=micros() ;
-
-	while ( (micros() - dwStartMicros) < dwUs )
-	{
-		//	do nothing
-	}
-}
-
-/*
- * Cortex-M3 Systick IT handler: MOVED TO MAIN DUE TO WEAK SYMBOL ISSUE NOT RESOLVED
- */
-void SysTick_Handler( void )
-{
-	tickReset();
-
-	// Increment tick count each ms
-	TimeTick_Increment() ;
+    uint32_t start = micros();
+    while ((micros() - start) < us)
+        ;
 }
 
 #if defined ( __ICCARM__ ) /* IAR Ewarm 5.41+ */
