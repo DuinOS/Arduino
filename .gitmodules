@@ -1,0 +1,3 @@
+[submodule "build/shared/examples/DuinOS"]
+	path = build/shared/examples/DuinOS
+	url = https://github.com/carlosdelfino/DuinOS-Examples
