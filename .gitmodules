@@ -1,3 +1,6 @@
 [submodule "build/shared/examples/DuinOS"]
 	path = build/shared/examples/DuinOS
 	url = https://github.com/carlosdelfino/DuinOS-Examples
+[submodule "hardware/arduino/attiny"]
+	path = hardware/arduino/attiny
+	url = ssh://git@github.com/carlosdelfino/attiny.git
