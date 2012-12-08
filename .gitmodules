@@ -4,3 +4,6 @@
 [submodule "hardware/arduino/attiny"]
 	path = hardware/arduino/attiny
 	url = ssh://git@github.com/carlosdelfino/attiny.git
+[submodule "build/shared/examples/ATTiny"]
+	path = build/shared/examples/ATTiny
+	url = git@github.com:carlosdelfino/ATTiny-Examples.git
