@@ -512,24 +512,14 @@ xTIMER *pxTimer;
 portBASE_TYPE xTimerListsWereSwitched, xResult;
 portTickType xTimeNow;
 
-	/* In this case the xTimerListsWereSwitched parameter is not used, but it
-	must be present in the function call. */
-	xTimeNow = prvSampleTimeNow( &xTimerListsWereSwitched );
-
 	while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL )
 	{
 		pxTimer = xMessage.pxTimer;
 
-		/* Is the timer already in a list of active timers?  When the command
-		is trmCOMMAND_PROCESS_TIMER_OVERFLOW, the timer will be NULL as the
-		command is to the task rather than to an individual timer. */
-		if( pxTimer != NULL )
+		if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
 		{
-			if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
-			{
-				/* The timer is in a list, remove it. */
-				uxListRemove( &( pxTimer->xTimerListItem ) );
-			}
+			/* The timer is in a list, remove it. */
+			uxListRemove( &( pxTimer->xTimerListItem ) );
 		}
 
 		traceTIMER_COMMAND_RECEIVED( pxTimer, xMessage.xMessageID, xMessage.xMessageValue );

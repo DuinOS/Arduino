@@ -498,9 +498,11 @@ static void prvSetupTimerInterrupt( void )
 	void SIG_OUTPUT_COMPARE1A( void )
 	*/
 	#if defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
-	SIGNAL(TIM0_OVF_vect, naked)
+		void TIM0_OVF_vect(void) __attribute__ ((signal,__INTR_ATTRS));
+		void TIM0_OVF_vect(void)
 	#else
-	SIGNAL(TIMER0_OVF_vect, naked)
+		void TIMER0_OVF_vect(void) __attribute__ ((signal,__INTR_ATTRS));
+		void TIMER0_OVF_vect(void)
 	#endif
 	{
 		vTaskIncrementTick();
