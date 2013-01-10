@@ -1,4 +1,9 @@
-app/bin/
+.settings/
+app/.settings/
+core/.settings/
+core/preproc/.settings/
+hardware/.settings/
+libraries/.settings/
 app/pde.jar
 build/macosx/work/
 core/bin/
@@ -17,3 +22,4 @@ hardware/arduino/bootloaders/caterina_LUFA/.dep/
 build/windows/work/
 build/linux/work/
 test-bin
+app/bin/
