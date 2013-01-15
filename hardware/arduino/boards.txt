@@ -32,7 +32,7 @@ uno_Duinos.bootloader.unlock_bits=0x3F
 uno_Duinos.bootloader.lock_bits=0x0F
 uno_Duinos.build.mcu=atmega328p
 uno_Duinos.build.f_cpu=16000000L
-uno_Duinos.build.core=arduino.DuinOS
+uno_Duinos.build.core=duinos
 uno_Duinos.build.variant=standard
 
 ##############################################################
