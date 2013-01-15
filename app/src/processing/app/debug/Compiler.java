@@ -29,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -172,10 +173,17 @@ public class Compiler implements MessageConsumer {
       if (!variant.contains(":")) {
         t = targetPlatform;
       } else {
-        String[] split = variant.split(":", 2);
-        t = Base
-            .getTargetPlatform(split[0], Preferences.get("target_platform"));
-        variant = split[1];
+        
+        String[] split = variant.split(":", 3);
+        if(Array.getLength(split) == 2){
+          t = Base
+              .getTargetPlatform(split[0], Preferences.get("target_platform"));
+          variant = split[1];
+        }else{
+          t = Base
+              .getTargetPlatform(split[0], split[1]);
+          variant = split[2];
+        }
       }
       File variantFolder = new File(t.getFolder(), "variants");
       variantFolder = new File(variantFolder, variant);
