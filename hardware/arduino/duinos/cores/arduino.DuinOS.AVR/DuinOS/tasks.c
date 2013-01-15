@@ -2471,7 +2471,7 @@ tskTCB *pxNewTCB;
 			listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
 
 			/* Divide by zero check. */
-			if( ulTotalRunTime > 0UL )
+			if( ulTotalRunTimeDiv100 > 0UL )
 			{
 				/* Has the task run at all? */
 				if( pxNextTCB->ulRunTimeCounter == 0UL )
@@ -2483,8 +2483,8 @@ tskTCB *pxNewTCB;
 				{
 					/* What percentage of the total run time has the task used?
 					This will always be rounded down to the nearest integer.
-					ulTotalRunTime has already been divided by 100. */
-					ulStatsAsPercentage = pxNextTCB->ulRunTimeCounter / ulTotalRunTime;
+					ulTotalRunTimeDiv100 has already been divided by 100. */
+					ulStatsAsPercentage = pxNextTCB->ulRunTimeCounter / ulTotalRunTimeDiv100;
 
 					if( ulStatsAsPercentage > 0UL )
 					{

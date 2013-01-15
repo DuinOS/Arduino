@@ -113,6 +113,11 @@ public class Base {
 
 
   static public void main(String args[]) throws Exception {
+    initPlatform();
+
+    // run static initialization that grabs all the prefs
+    Preferences.init(null);
+
     try {
       File versionFile = getContentFile("lib/version.txt");
       if (versionFile.exists()) {
@@ -151,8 +156,6 @@ public class Base {
     }
     */
 
-    initPlatform();
-
 //    // Set the look and feel before opening the window
 //    try {
 //      platform.setLookAndFeel();
@@ -171,12 +174,6 @@ public class Base {
 
     // Make sure a full JDK is installed
     //initRequirements();
-
-    // run static initialization that grabs all the prefs
-    Preferences.init(null);
-
-    // load the I18n module for internationalization
-    I18n.init(Preferences.get("editor.languages.current"));
 
     // setup the theme coloring fun
     Theme.init();
@@ -281,12 +278,22 @@ public class Base {
 
     boolean opened = false;
     boolean doUpload = false;
+    boolean doVerify = false;
+    boolean doVerbose = false;
     String selectBoard = null;
     String selectPort = null;
     // Check if any files were passed in on the command line
     for (int i = 0; i < args.length; i++) {
       if (args[i].equals("--upload")) {
         doUpload = true;
+        continue;
+      }
+      if (args[i].equals("--verify")) {
+        doVerify = true;
+        continue;
+      }
+      if (args[i].equals("--verbose") || args[i].equals("-v")) {
+        doVerbose = true;
         continue;
       }
       if (args[i].equals("--board")) {
@@ -319,16 +326,42 @@ public class Base {
       }
     }
 
-    if (doUpload) {
-      if (!opened)
-        throw new Exception(_("Can't open source sketch!"));
-      Thread.sleep(2000);
+    if (doUpload || doVerify) {
+      if (!opened) {
+        System.out.println(_("Can't open source sketch!"));
+        System.exit(2);
+      }
+      
+      // Set verbosity for command line build
+      Preferences.set("build.verbose", "" + doVerbose);
+      Preferences.set("upload.verbose", "" + doVerbose);
+
       Editor editor = editors.get(0);
-      if (selectPort != null)
-        editor.selectSerialPort(selectPort);
+      
+      // Wait until editor is initialized
+      while (!editor.status.isInitialized())
+        Thread.sleep(10);
+      
+      // Do board selection if requested
       if (selectBoard != null)
         selectBoard(selectBoard, editor);
-      editor.exportHandler.run();
+      
+      if (doUpload) {
+        // Build and upload
+        if (selectPort != null)
+          editor.selectSerialPort(selectPort);
+        editor.exportHandler.run();
+      } else {
+        // Build only
+        editor.runHandler.run();
+      }
+      
+      // Error during build or upload
+      int res = editor.status.mode;
+      if (res == EditorStatus.ERR)
+        System.exit(1);
+      
+      // No errors exit gracefully
       System.exit(0);
     }
 
@@ -973,6 +1006,8 @@ public class Base {
   }
 
   public Map<String, File> getIDELibs() {
+    if (libraries == null)
+      return new HashMap<String, File>();
     Map<String, File> ideLibs = new HashMap<String, File>(libraries);
     for (String lib : libraries.keySet()) {
       if (FileUtils.isSubDirectory(getSketchbookFolder(), libraries.get(lib)))
@@ -982,6 +1017,8 @@ public class Base {
   }
 
   public Map<String, File> getUserLibs() {
+    if (libraries == null)
+      return new HashMap<String, File>();
     Map<String, File> userLibs = new HashMap<String, File>(libraries);
     for (String lib : libraries.keySet()) {
       if (!FileUtils.isSubDirectory(getSketchbookFolder(), libraries.get(lib)))
@@ -1005,34 +1042,37 @@ public class Base {
     importMenu.add(addLibraryMenuItem);
 
     // Split between user supplied libraries and IDE libraries
-    Map<String, File> ideLibs = getIDELibs();
-    Map<String, File> userLibs = getUserLibs();
-    try {
-      // Find the current target. Get the platform, and then select the
-      // correct name and core path.
-      PreferencesMap prefs = getTargetPlatform().getPreferences();
-      String targetname = prefs.get("name");
+    TargetPlatform targetPlatform = getTargetPlatform();
+    if (targetPlatform != null) {
+      Map<String, File> ideLibs = getIDELibs();
+      Map<String, File> userLibs = getUserLibs();
+      try {
+        // Find the current target. Get the platform, and then select the
+        // correct name and core path.
+        PreferencesMap prefs = targetPlatform.getPreferences();
+        String targetname = prefs.get("name");
 
-      if (false) {
-	// Hack to extract these words by gettext tool.
-	// These phrases are actually defined in the "platform.txt".
-	String notused = _("Arduino AVR Boards");
-	notused = _("Arduino ARM (32-bits) Boards");
-      }
+        if (false) {
+          // Hack to extract these words by gettext tool.
+          // These phrases are actually defined in the "platform.txt".
+          String notused = _("Arduino AVR Boards");
+          notused = _("Arduino ARM (32-bits) Boards");
+        }
 
-      JMenuItem platformItem = new JMenuItem(_(targetname));
-      platformItem.setEnabled(false);
-      importMenu.add(platformItem);
-      if (ideLibs.size()>0) {
-        importMenu.addSeparator();
-        addLibraries(importMenu, ideLibs);
+        JMenuItem platformItem = new JMenuItem(_(targetname));
+        platformItem.setEnabled(false);
+        importMenu.add(platformItem);
+        if (ideLibs.size() > 0) {
+          importMenu.addSeparator();
+          addLibraries(importMenu, ideLibs);
+        }
+        if (userLibs.size() > 0) {
+          importMenu.addSeparator();
+          addLibraries(importMenu, userLibs);
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
       }
-      if (userLibs.size()>0) {
-        importMenu.addSeparator();
-        addLibraries(importMenu, userLibs);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
     }
   }
 
@@ -1052,7 +1092,7 @@ public class Base {
         File folder = ideLibs.get(name);
         addSketchesSubmenu(menu, name, folder, false);
         // Allows "fat" libraries to have examples in the root folder
-        if (folder.getName().equals(Base.getTargetPlatform()))
+        if (folder.getName().equals(Base.getTargetPlatform().getName()))
           addSketchesSubmenu(menu, name, folder.getParentFile(), false);
       }
 
@@ -1135,11 +1175,15 @@ public class Base {
   }
 
   public void onBoardOrPortChange() {
+    TargetPlatform targetPlatform = getTargetPlatform();
+    if (targetPlatform == null)
+      return;
+    
     // Calculate paths for libraries and examples
     examplesFolder = getContentFile("examples");
     toolsFolder = getContentFile("tools");
 
-    File platformFolder = getTargetPlatform().getFolder();
+    File platformFolder = targetPlatform.getFolder();
     librariesFolders = new ArrayList<File>();
     librariesFolders.add(getContentFile("libraries"));
     librariesFolders.add(new File(platformFolder, "libraries"));
@@ -1153,9 +1197,14 @@ public class Base {
     // Populate importToLibraryTable
     importToLibraryTable = new HashMap<String, File>();
     for (File subfolder : libraries.values()) {
-      String packages[] = headerListFromIncludePath(subfolder);
-      for (String pkg : packages)
-        importToLibraryTable.put(pkg, subfolder);
+      try {
+        String packages[] = headerListFromIncludePath(subfolder);
+        for (String pkg : packages) {
+          importToLibraryTable.put(pkg, subfolder);
+        }
+      } catch (IOException e) {
+        showWarning(_("Error"), I18n.format("Unable to list header files in {0}", subfolder), e);
+      }
     }
 
     // Update editors status bar
@@ -1403,6 +1452,9 @@ public class Base {
    */
   protected boolean addSketches(JMenu menu, File folder,
                                 final boolean replaceExisting) throws IOException {
+    if (folder == null)
+      return false;
+    
     // skip .DS_Store files, etc (this shouldn't actually be necessary)
     if (!folder.isDirectory()) return false;
 
@@ -1501,8 +1553,13 @@ public class Base {
     Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 
     ActionListener listener = new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        activeEditor.getSketch().importLibrary(e.getActionCommand());
+      public void actionPerformed(ActionEvent event) {
+        String jarPath = event.getActionCommand();
+        try {
+          activeEditor.getSketch().importLibrary(jarPath);
+        } catch (IOException e) {
+          showWarning(_("Error"), I18n.format("Unable to list header files in {0}", jarPath), e);
+        }
       }
     };
 
@@ -1524,8 +1581,12 @@ public class Base {
    * the header files in its sub-folders, as those should be included from
    * within the header files at the top-level).
    */
-  static public String[] headerListFromIncludePath(File path) {
-    return path.list(new OnlyFilesWithExtension(".h"));
+  static public String[] headerListFromIncludePath(File path) throws IOException {
+    String[] list = path.list(new OnlyFilesWithExtension(".h"));
+    if (list == null) {
+      throw new IOException();
+    }
+    return list;
   }
 
   protected void loadHardware(File folder) {
@@ -1849,7 +1910,10 @@ public class Base {
    */
   static public TargetPlatform getTargetPlatform(String packageName,
                                                  String platformName) {
-    return packages.get(packageName).get(platformName);
+    TargetPackage p = packages.get(packageName);
+    if (p == null)
+      return null;
+    return p.get(platformName);
   }
 
   static public TargetPlatform getCurrentTargetPlatformFromPackage(String pack) {
@@ -2714,11 +2778,6 @@ public class Base {
             + "(ASCII only and no spaces, and it cannot start with a number)"),
                                   libName);
         editor.statusError(mess);
-        return;
-      }
-      String[] headerFiles = headerListFromIncludePath(libFolder);
-      if (headerFiles == null || headerFiles.length == 0) {
-        editor.statusError(_("Not a valid library: no header files found"));
         return;
       }
 
