@@ -153,9 +153,16 @@ public class Compiler implements MessageConsumer {
     if (!core.contains(":")) {
       tp = targetPlatform;
     } else {
-      String[] split = core.split(":", 2);
-      tp = Base.getTargetPlatform(split[0], Preferences.get("target_platform"));
-      core = split[1];
+      String[] split = core.split(":", 3);
+      if(Array.getLength(split) == 2){
+        tp = Base
+            .getTargetPlatform(split[0], Preferences.get("target_platform"));
+        core = split[1];
+      }else{
+        tp = Base
+            .getTargetPlatform(split[0], split[1]);
+        core = split[2];
+      }
     }
     File coreFolder = new File(tp.getFolder(), "cores");
     coreFolder = new File(coreFolder, core);
