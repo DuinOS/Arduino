@@ -18,8 +18,10 @@ hardware/arduino/bootloaders/caterina_LUFA/Caterina.lss
 hardware/arduino/bootloaders/caterina_LUFA/Caterina.elf
 hardware/arduino/bootloaders/caterina_LUFA/Caterina.eep
 hardware/arduino/bootloaders/caterina_LUFA/.dep/
-.gitignore
 build/windows/work/
 build/linux/work/
-test-bin
-app/bin/
+build/linux/dist/*.tar.gz
+build/linux/*.tgz
+test-bin 
+app/bin/ 
+*.iml 

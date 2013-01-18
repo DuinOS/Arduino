@@ -111,9 +111,17 @@ public class Base {
   List<Editor> editors = Collections.synchronizedList(new ArrayList<Editor>());
   Editor activeEditor;
 
+  static File portableFolder = null;
+  static final String portableSketchbookFolder = "sketchbook";
+
 
   static public void main(String args[]) throws Exception {
     initPlatform();
+
+    // Portable folder
+    portableFolder = getContentFile("portable");
+    if (!portableFolder.exists())
+      portableFolder = null;
 
     // run static initialization that grabs all the prefs
     Preferences.init(null);
@@ -249,14 +257,18 @@ public class Base {
     // If a value is at least set, first check to see if the folder exists.
     // If it doesn't, warn the user that the sketchbook folder is being reset.
     if (sketchbookPath != null) {
-      File skechbookFolder = new File(sketchbookPath);
-      if (!skechbookFolder.exists()) {
+      File sketchbookFolder;
+      if (portableFolder != null)
+        sketchbookFolder = new File(portableFolder, sketchbookPath);
+      else
+        sketchbookFolder = new File(sketchbookPath);
+      if (!sketchbookFolder.exists()) {
         Base.showWarning(_("Sketchbook folder disappeared"),
-                         _("The sketchbook folder no longer exists.\n" +
-                           "Arduino will switch to the default sketchbook\n" +
-                           "location, and create a new sketchbook folder if\n" +
-                           "necessary. Arduino will then stop talking about\n" +
-                           "himself in the third person."), null);
+                _("The sketchbook folder no longer exists.\n" +
+                        "Arduino will switch to the default sketchbook\n" +
+                        "location, and create a new sketchbook folder if\n" +
+                        "necessary. Arduino will then stop talking about\n" +
+                        "himself in the third person."), null);
         sketchbookPath = null;
       }
     }
@@ -264,7 +276,10 @@ public class Base {
     // If no path is set, get the default sketchbook folder for this platform
     if (sketchbookPath == null) {
       File defaultFolder = getDefaultSketchbookFolder();
-      Preferences.set("sketchbook.path", defaultFolder.getAbsolutePath());
+      if (portableFolder != null)
+        Preferences.set("sketchbook.path", portableSketchbookFolder);
+      else
+        Preferences.set("sketchbook.path", defaultFolder.getAbsolutePath());
       if (!defaultFolder.exists()) {
         defaultFolder.mkdirs();
       }
@@ -422,6 +437,14 @@ public class Base {
     int opened = 0;
     for (int i = 0; i < count; i++) {
       String path = Preferences.get("last.sketch" + i + ".path");
+      if (portableFolder != null) {
+        File absolute = new File(portableFolder, path);
+        try {
+          path = absolute.getCanonicalPath();
+        } catch (IOException e) {
+          // path unchanged.
+        }
+      }
       int[] location;
       if (windowPositionValid) {
         String locationStr = Preferences.get("last.sketch" + i + ".location");
@@ -460,6 +483,11 @@ public class Base {
           !editor.getSketch().isModified()) {
         continue;
       }
+      if (portableFolder != null) {
+        path = FileUtils.relativePath(portableFolder.toString(), path);
+        if (path == null)
+          continue;
+      }
       Preferences.set("last.sketch" + index + ".path", path);
 
       int[] location = editor.getPlacement();
@@ -478,6 +506,11 @@ public class Base {
     String untitledPath = untitledFolder.getAbsolutePath();
     if (path.startsWith(untitledPath)) {
       path = "";
+    } else
+    if (portableFolder != null) {
+      path = FileUtils.relativePath(portableFolder.toString(), path);
+      if (path == null)
+        path = "";
     }
     Preferences.set("last.sketch" + index + ".path", path);
   }
@@ -1759,6 +1792,9 @@ public class Base {
 
 
   static public File getSettingsFolder() {
+    if (portableFolder != null)
+      return portableFolder;
+
     File settingsFolder = null;
 
     String preferencesPath = Preferences.get("settings.path");
@@ -1778,8 +1814,8 @@ public class Base {
     if (!settingsFolder.exists()) {
       if (!settingsFolder.mkdirs()) {
         showError(_("Settings issues"),
-                  _("Arduino cannot run because it could not\n" +
-                    "create a folder to store your settings."), null);
+                _("Arduino cannot run because it could not\n" +
+                        "create a folder to store your settings."), null);
       }
     }
     return settingsFolder;
@@ -1938,7 +1974,19 @@ public class Base {
     return boardPreferences;
   }
 
+  static public File getPortableFolder() {
+    return portableFolder;
+  }
+
+
+  static public String getPortableSketchbookFolder() {
+    return portableSketchbookFolder;
+  }
+
+
   static public File getSketchbookFolder() {
+    if (portableFolder != null)
+      return new File(portableFolder, Preferences.get("sketchbook.path"));
     return new File(Preferences.get("sketchbook.path"));
   }
 
@@ -1971,6 +2019,9 @@ public class Base {
 
 
   protected File getDefaultSketchbookFolder() {
+    if (portableFolder != null)
+      return new File(portableFolder, portableSketchbookFolder);
+
     File sketchbookFolder = null;
     try {
       sketchbookFolder = platform.getDefaultSketchbookFolder();
