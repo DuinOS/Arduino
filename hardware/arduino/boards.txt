@@ -19,7 +19,23 @@ uno.build.core=arduino
 uno.build.variant=standard
 
 ##############################################################
+uno_Duinos.name=Arduino Uno + Duinos
+uno_Duinos.upload.protocol=arduino
+uno_Duinos.upload.maximum_size=30720
+uno_Duinos.upload.speed=115200
+uno_Duinos.bootloader.low_fuses=0xff
+uno_Duinos.bootloader.high_fuses=0xde
+uno_Duinos.bootloader.extended_fuses=0x05
+uno_Duinos.bootloader.path=optiboot
+uno_Duinos.bootloader.file=optiboot_atmega328.hex
+uno_Duinos.bootloader.unlock_bits=0x3F
+uno_Duinos.bootloader.lock_bits=0x0F
+uno_Duinos.build.mcu=atmega328p
+uno_Duinos.build.f_cpu=16000000L
+uno_Duinos.build.core=duinos
+uno_Duinos.build.variant=standard
 
+##############################################################
 atmega328.name=Arduino Duemilanove w/ ATmega328
 
 atmega328.upload.protocol=arduino
