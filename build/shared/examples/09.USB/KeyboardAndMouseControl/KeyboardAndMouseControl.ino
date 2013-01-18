@@ -23,8 +23,6 @@
  */
 
 // set pin numbers for the five buttons:
-
-// set pin numbers for the five buttons:
 const int upButton = 2;     
 const int downButton = 3;        
 const int leftButton = 4;
@@ -67,7 +65,7 @@ void loop() {
       Mouse.move(40, 0);
       break;
     case 'm':
-      // move mouse right
+      // perform mouse left click
       Mouse.click(MOUSE_LEFT);
       break;
     }
