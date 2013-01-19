@@ -20,3 +20,4 @@ build/linux/dist/*.tar.gz
 build/linux/*.tgz
 test-bin
 *.iml
+.project
