@@ -1,5 +1,5 @@
-#include <Arduino.h>
 #include <FreeRTOSConfig.h>
+#include <Arduino.h>
 
 unsigned portBASE_TYPE mainSetupPriority  = HIGH_PRIORITY;
 unsigned portBASE_TYPE mainSetupStackSize = configMINIMAL_STACK_SIZE * 2;
@@ -33,7 +33,7 @@ void setup_Task(void *pvParameters)
 
 }
 
-int main(void) 
+int main(void)
 {
 
 	init();

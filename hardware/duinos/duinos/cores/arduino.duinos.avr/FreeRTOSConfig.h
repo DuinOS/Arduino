@@ -115,6 +115,7 @@
 	#define INCLUDE_vTaskSuspend			1
 	#define INCLUDE_vTaskDelayUntil			1
 	#define INCLUDE_vTaskDelay				1
+	#define INCLUDE_xTaskGetSchedulerState  0
 
 #elif defined(__AVR_ATmega1284P__)
 
@@ -155,6 +156,7 @@
 	#define INCLUDE_vTaskSuspend			1
 	#define INCLUDE_vTaskDelayUntil			1
 	#define INCLUDE_vTaskDelay				1
+	#define INCLUDE_xTaskGetSchedulerState  0
 
 #elif defined(__AVR_ATmega1280__)
 	//##Arduino Mega? Not tested yet:
@@ -195,6 +197,7 @@
 	#define INCLUDE_vTaskSuspend			1
 	#define INCLUDE_vTaskDelayUntil			1
 	#define INCLUDE_vTaskDelay				1
+	#define INCLUDE_xTaskGetSchedulerState  0
 	
 #elif defined(__AVR_ATmega2560__)
 	//##Arduino Mega 2560? Not tested yet:
@@ -236,6 +239,7 @@
 	#define INCLUDE_vTaskSuspend			1
 	#define INCLUDE_vTaskDelayUntil			1
 	#define INCLUDE_vTaskDelay				1	
+	#define INCLUDE_xTaskGetSchedulerState  0
 
 #elif defined(__AVR_ATmega328P__)
 	//##Mega328p:
@@ -275,6 +279,7 @@
 	#define INCLUDE_vTaskSuspend			1
 	#define INCLUDE_vTaskDelayUntil			1
 	#define INCLUDE_vTaskDelay				1
+	#define INCLUDE_xTaskGetSchedulerState  0
 
 #elif defined(__AVR_ATmega88__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__)
 	//##Mega88, Mega88p, Mega168, Mega168p:
@@ -314,7 +319,7 @@
 	#define INCLUDE_vTaskSuspend			1
 	#define INCLUDE_vTaskDelayUntil			1
 	#define INCLUDE_vTaskDelay				1
-
+	#define INCLUDE_xTaskGetSchedulerState  0
 #else
 	#error "Device is not supported by DuinOS"
 
