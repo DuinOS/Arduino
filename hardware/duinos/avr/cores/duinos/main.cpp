@@ -1,13 +1,9 @@
 #include <FreeRTOSConfig.h>
 #include <Arduino.h>
 
-unsigned portBASE_TYPE mainSetupPriority  = HIGH_PRIORITY;
-#if defined(__AVR_ATmega2560__)
-unsigned portBASE_TYPE mainSetupStackSize = configMINIMAL_STACK_SIZE * 4;
-#else
-unsigned portBASE_TYPE mainSetupStackSize = configMINIMAL_STACK_SIZE * 2;
-#endif
-unsigned portBASE_TYPE mainLoopPriority   = LOW_PRIORITY;
+unsigned portBASE_TYPE mainSetupPriority  = configSETUP_PRIORITY;
+unsigned portBASE_TYPE mainSetupStackSize = configMINIMAL_STACK_SIZE * 5;
+unsigned portBASE_TYPE mainLoopPriority   = configLOOP_PRIORITY;
 unsigned portBASE_TYPE mainLoopStackSize  = configMINIMAL_STACK_SIZE;
 
 xTaskHandle xHandleLoop;
