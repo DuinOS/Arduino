@@ -60,6 +60,9 @@
  * These definitions should be adjusted for your particular hardware and
  * application requirements.
  *
+ * For each atmega or attiny chip have a file, you can reutilizes a existent
+ * or create a new.
+ *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *
