@@ -39,7 +39,7 @@
 
 #include <Udp.h>
 
-#define UDP_TX_PACKET_MAX_SIZE 24
+#include "EthernetConfig.h"
 
 class EthernetUDP : public UDP {
 private:

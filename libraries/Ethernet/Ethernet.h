@@ -8,12 +8,14 @@
 #include "EthernetServer.h"
 #include "Dhcp.h"
 
-#define MAX_SOCK_NUM 4
+#include "EthernetConfig.h"
 
 class EthernetClass {
 private:
   IPAddress _dnsServerAddress;
   DhcpClass* _dhcp;
+  bool _socksfree[MAX_SOCK_NUM];
+  void initSocksFree();
 public:
   static uint8_t _state[MAX_SOCK_NUM];
   static uint16_t _server_port[MAX_SOCK_NUM];
@@ -31,6 +33,8 @@ public:
   IPAddress subnetMask();
   IPAddress gatewayIP();
   IPAddress dnsServerIP();
+
+  int nextSock();
 
   friend class EthernetClient;
   friend class EthernetServer;
