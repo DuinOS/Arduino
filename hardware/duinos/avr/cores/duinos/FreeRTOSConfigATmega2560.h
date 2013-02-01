@@ -21,11 +21,11 @@
 #define configUSE_CO_ROUTINES 		0
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
-	/* setup() and loop() parameters */
-	#define configSETUP_STACK_SIZE          (configMINIMAL_STACK_SIZE * 4)
-	#define configLOOP_STACK_SIZE           (configMINIMAL_STACK_SIZE)
-	#define configSETUP_PRIORITY			HIGH_PRIORITY;
-	#define configLOOP_PRIORITY			LOW_PRIORITY;
+/* setup() and loop() parameters */
+#define configSETUP_STACK_SIZE          (configMINIMAL_STACK_SIZE * 4)
+#define configLOOP_STACK_SIZE           (configMINIMAL_STACK_SIZE * 2)
+#define configSETUP_PRIORITY			HIGH_PRIORITY;
+#define configLOOP_PRIORITY			    LOW_PRIORITY;
 
 /* Set the following definitions to 1 to include the API function, or zero
  to exclude the API function. */
