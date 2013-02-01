@@ -8,14 +8,16 @@
 #include "EthernetServer.h"
 #include "Dhcp.h"
 
-#include "EthernetConfig.h"
+typedef uint8_t SOCKET;
+
+#define MAX_SOCK_NUM 4
 
 class EthernetClass {
 private:
   IPAddress _dnsServerAddress;
   DhcpClass* _dhcp;
-  bool _socksfree[MAX_SOCK_NUM];
-  void initSocksFree();
+  SOCKET _socketsfree[MAX_SOCK_NUM];
+  void initSockets();
 public:
   static uint8_t _state[MAX_SOCK_NUM];
   static uint16_t _server_port[MAX_SOCK_NUM];
@@ -29,12 +31,14 @@ public:
   void begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet);
   int maintain();
 
+  bool isSocketFree(SOCKET sock);
+  void useSocket(SOCKET sock);
+  void freeSocket(SOCKET sock);
+
   IPAddress localIP();
   IPAddress subnetMask();
   IPAddress gatewayIP();
   IPAddress dnsServerIP();
-
-  int nextSock();
 
   friend class EthernetClient;
   friend class EthernetServer;

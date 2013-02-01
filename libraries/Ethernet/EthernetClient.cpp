@@ -141,6 +141,9 @@ void EthernetClient::stop() {
     close(_sock);
 
   EthernetClass::_server_port[_sock] = 0;
+
+  Ethernet.freeSocket(_sock);
+
   _sock = MAX_SOCK_NUM;
 }
 

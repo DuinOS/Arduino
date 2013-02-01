@@ -48,21 +48,35 @@ void EthernetServer::accept()
   }
 }
 
-EthernetClient * EthernetServer::available() {
-	accept();
+EthernetClient EthernetServer::available()
+{
+  accept();
 
-	int sock = Ethernet.nextSock();
-	EthernetClient client(sock);
-	if (EthernetClass::_server_port[sock] == _port
-			&& (client.status() == SnSR::ESTABLISHED
-					|| client.status() == SnSR::CLOSE_WAIT)) {
-		if (client.available()) {
-			clients[sock] = &client;
-			return &client;
-		}
-	}
-	return false;
+  for (int sock = 0; sock < MAX_SOCK_NUM; sock++) {
+	  Serial.print("socket: ");
+	  Serial.println(sock);
+	  if(Ethernet.isSocketFree(sock)){
+		  Serial.print("socket free: ");
+		  	  Serial.println(sock);
+		  	  EthernetClient client(sock);
+    if (EthernetClass::_server_port[sock] == _port &&
+        (client.status() == SnSR::ESTABLISHED ||
+         client.status() == SnSR::CLOSE_WAIT)) {
+      if (client.available()) {
+        // XXX: don't always pick the lowest numbered socket.
+    	  Serial.print("socket a ser usado: ");
+    	  		  	  Serial.println(sock);
+    	  		  Ethernet.useSocket(sock);
+
+        return client;
+      }
+    }
+	  }
+  }
+
+  return EthernetClient(MAX_SOCK_NUM);
 }
+
 size_t EthernetServer::write(uint8_t b) 
 {
   return write(&b, 1);
