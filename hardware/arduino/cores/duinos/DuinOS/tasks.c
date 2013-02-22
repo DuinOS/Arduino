@@ -491,12 +491,6 @@ static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TY
 
 /*lint +e956 */
 
-
-
-/*-----------------------------------------------------------
- * TASK CREATION API documented in task.h
- *----------------------------------------------------------*/
-
 signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions )
 {
 signed portBASE_TYPE xReturn;
@@ -720,15 +714,7 @@ tskTCB * pxNewTCB;
 	}
 
 #endif /* INCLUDE_vTaskDelete */
-
-
-
-
-
-
-/*-----------------------------------------------------------
- * TASK CONTROL API documented in task.h
- *----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
 
 #if ( INCLUDE_vTaskDelayUntil == 1 )
 
@@ -1241,11 +1227,7 @@ tskTCB * pxNewTCB;
 	}
 
 #endif /* ( ( INCLUDE_xTaskResumeFromISR == 1 ) && ( INCLUDE_vTaskSuspend == 1 ) ) */
-
-/*-----------------------------------------------------------
- * PUBLIC SCHEDULER CONTROL documented in task.h
- *----------------------------------------------------------*/
-
+/*-----------------------------------------------------------*/
 
 void vTaskStartScheduler( void )
 {
@@ -1439,17 +1421,6 @@ signed portBASE_TYPE xAlreadyYielded = pdFALSE;
 	return xAlreadyYielded;
 }
 /*-----------------------------------------------------------*/
-
-
-
-
-
-
-/*-----------------------------------------------------------
- * PUBLIC TASK UTILITIES documented in task.h
- *----------------------------------------------------------*/
-
-
 
 portTickType xTaskGetTickCount( void )
 {
@@ -1667,11 +1638,6 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 
 #endif /* configUSE_TICKLESS_IDLE */
 /*----------------------------------------------------------*/
-
-/*-----------------------------------------------------------
- * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES
- * documented in task.h
- *----------------------------------------------------------*/
 
 void vTaskIncrementTick( void )
 {
@@ -2215,6 +2181,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 } /*lint !e715 pvParameters is not accessed but all task functions require the same prototype. */
 /*-----------------------------------------------------------*/
 
+#if configUSE_TICKLESS_IDLE != 0
 
 	eSleepModeStatus eTaskConfirmSleepModeStatus( void )
 	{
@@ -2236,29 +2203,23 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 			{
 				/* The idle task exists in addition to the application tasks. */
 				const unsigned portBASE_TYPE uxNonApplicationTasks = 1;
-		if( listCURRENT_LIST_LENGTH( &xPendingReadyList ) != 0 )
-		{
-			/* A task was made ready while the scheduler was suspended. */
-			eReturn = eAbortSleep;
-		}
-		else if( xMissedYield != pdFALSE )
-		{
-			/* A yield was pended while the scheduler was suspended. */
-			eReturn = eAbortSleep;
+
+				/* If timers are not being used and all the tasks are in the
+				suspended list (which might mean they have an infinite block
+				time rather than actually being suspended) then it is safe to
+				turn all clocks off and just wait for external interrupts. */
+				if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == ( uxCurrentNumberOfTasks - uxNonApplicationTasks ) )
+				{
+					eReturn = eNoTasksWaitingTimeout;
+				}
+			}
+			#endif /* configUSE_TIMERS */
 		}
 
 		return eReturn;
 	}
 #endif /* configUSE_TICKLESS_IDLE */
 /*-----------------------------------------------------------*/
-
-
-
-/*-----------------------------------------------------------
- * File private functions documented at the top of the file.
- *----------------------------------------------------------*/
-
-
 
 static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth )
 {
@@ -2789,7 +2750,7 @@ tskTCB *pxNewTCB;
 				}
 			}
 		}
-	} 
+	}
 
 #endif /* portCRITICAL_NESTING_IN_TCB */
 /*-----------------------------------------------------------*/
