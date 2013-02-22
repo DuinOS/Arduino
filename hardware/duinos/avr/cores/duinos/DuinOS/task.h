@@ -1,6 +1,8 @@
 /*
-    FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
+    FreeRTOS V7.4.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
+    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
@@ -27,42 +29,47 @@
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    >>>NOTE<<< The modification to the GPL is included to allow you to
+
+    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
     distribute a combined work that includes FreeRTOS without being obliged to
     provide the source code for proprietary components outside of the FreeRTOS
-    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public
-    License and the FreeRTOS license exception along with FreeRTOS; if not it
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-    by writing to Richard Barry, contact details for whom are available on the
-    FreeRTOS WEB site.
+    kernel.
+
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+    details. You should have received a copy of the GNU General Public License
+    and the FreeRTOS license exception along with FreeRTOS; if not itcan be
+    viewed here: http://www.freertos.org/a00114.html and also obtained by
+    writing to Real Time Engineers Ltd., contact details for whom are available
+    on the FreeRTOS WEB site.
 
     1 tab == 4 spaces!
 
-	
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
-	 *    not run, what could be wrong?                                      *
-	 *                                                                       *
-	 *    http://www.FreeRTOS.org/FAQHelp.html                               *
-	 *                                                                       *
+     *    not run, what could be wrong?"                                     *
+     *                                                                       *
+     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *                                                                       *
     ***************************************************************************
 
-	
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
-    license and contact details.
-	
-	http://www.FreeRTOS.org/plus - Selection of FreeRTOS ecosystem products,
-	including FreeRTOS+Trace - an indispensable productivity tool.
 
-	Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-	the code with commercial support, indemnification, and middleware, under 
-	the OpenRTOS brand:  http://www.OpenRTOS.com.  High Integrity Systems also
-	provide a safety engineered and independently SIL3 certified version under 
-	the	SafeRTOS brand: http://www.SafeRTOS.com.
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
+    license and Real Time Engineers Ltd. contact details.
+
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool, and our new
+    fully thread aware and reentrant UDP/IP stack.
+
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
+    indemnification and middleware, under the OpenRTOS brand.
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
+    engineered and independently SIL3 certified version for use in safety and 
+    mission critical applications that require provable dependability.
 */
 
 
@@ -84,7 +91,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V7.3.0"
+#define tskKERNEL_VERSION_NUMBER "V7.4.0"
 
 /**
  * task. h
@@ -140,6 +147,15 @@ typedef enum
 	eSuspended,		/* The task being queried is in the Suspended state, or is in the Blocked state with an infinite time out. */
 	eDeleted		/* The task being queried has been deleted, but its TCB has not yet been freed. */
 } eTaskState;
+
+/* Possible return values for eTaskConfirmSleepModeStatus(). */
+typedef enum
+{
+	eAbortSleep = 0,		/* A task has been made ready or a context switch pended since portSUPPORESS_TICKS_AND_SLEEP() was called - abort entering a sleep mode. */
+	eStandardSleep,			/* Enter a sleep mode that will not last any longer than the expected idle time. */
+	eNoTasksWaitingTimeout	/* No tasks are waiting for a timeout so it is safe to enter a sleep mode that can only be exited by an external interrupt. */
+} eSleepModeStatus;
+
 
 /*
  * Defines the priority used by the idle task.  This must not be modified.
@@ -332,7 +348,7 @@ static const xTaskParameters xCheckTaskParameters =
 	// the task, with appropriate access permissions.  Different processors have
 	// different memory alignment requirements - refer to the FreeRTOS documentation
 	// for full information.
-	{											
+	{
 		// Base address					Length	Parameters
         { cReadWriteArray,				32,		portMPU_REGION_READ_WRITE },
         { cReadOnlyArray,				32,		portMPU_REGION_READ_ONLY },
@@ -383,7 +399,7 @@ xTaskHandle xHandle;
 // ucOneKByte array.  The other two of the maximum 3 definable regions are
 // unused so set to zero.
 static const xMemoryRegion xAltRegions[ portNUM_CONFIGURABLE_REGIONS ] =
-{											
+{
 	// Base address		Length		Parameters
 	{ ucOneKByte,		1024,		portMPU_REGION_READ_WRITE },
 	{ 0,				0,			0 },
@@ -399,7 +415,7 @@ void vATask( void *pvParameters )
 	// for this purpose.  NULL is used as the task handle to indicate that this
 	// function should modify the MPU regions of the calling task.
 	vTaskAllocateMPURegions( NULL, xAltRegions );
-	
+
 	// Now the task can continue its function, but from this point on can only
 	// access its stack and the ucOneKByte array (unless any other statically
 	// defined or shared regions have been declared elsewhere).
@@ -618,7 +634,7 @@ unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle xTask ) PRIVILEGED_FUNCTIO
  * INCLUDE_eTaskGetState must be defined as 1 for this function to be available.
  * See the configuration section for more information.
  *
- * Obtain the state of any task.  States are encoded by the eTaskState 
+ * Obtain the state of any task.  States are encoded by the eTaskState
  * enumerated type.
  *
  * @param xTask Handle of the task to be queried.
@@ -1174,7 +1190,7 @@ constant. */
 portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter ) PRIVILEGED_FUNCTION;
 
 /**
- * xTaskGetIdleTaskHandle() is only available if 
+ * xTaskGetIdleTaskHandle() is only available if
  * INCLUDE_xTaskGetIdleTaskHandle is set to 1 in FreeRTOSConfig.h.
  *
  * Simply returns the handle of the idle task.  It is not valid to call
@@ -1314,7 +1330,7 @@ signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed ch
  */
 unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 
-/* 
+/*
  * Set the uxTCBNumber of the task referenced by the xTask parameter to
  * ucHandle.
  */
@@ -1328,6 +1344,21 @@ void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
  * a time equal to the idle period.
  */
 void vTaskStepTick( portTickType xTicksToJump );
+
+/*
+ * Provided for use within portSUPPRESS_TICKS_AND_SLEEP() to allow the port
+ * specific sleep function to determine if it is ok to proceed with the sleep,
+ * and if it is ok to proceed, if it is ok to sleep indefinitely.
+ *
+ * This function is necessary because portSUPPRESS_TICKS_AND_SLEEP() is only
+ * called with the scheduler suspended, not from within a critical section.  It
+ * is therefore possible for an interrupt to request a context switch between
+ * portSUPPRESS_TICKS_AND_SLEEP() and the low power mode actually being
+ * entered.  eTaskConfirmSleepModeStatus() should be called from a short
+ * critical section between the timer being stopped and the sleep mode being
+ * entered to ensure it is ok to proceed into the sleep mode.
+ */
+eSleepModeStatus eTaskConfirmSleepModeStatus( void );
 
 #ifdef __cplusplus
 }
