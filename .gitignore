@@ -1,4 +1,5 @@
 .settings/
+app/bin/
 app/.settings/
 core/.settings/
 core/preproc/.settings/
@@ -29,4 +30,4 @@ build/linux/*.tgz
 test-bin
 app/bin/
 *.iml
-
+.idea

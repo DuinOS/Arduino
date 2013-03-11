@@ -35,7 +35,7 @@ public class I18n {
       if (language != null && language.trim().length() > 0) {
         Locale.setDefault(new Locale(language));
       }
-      i18n = ResourceBundle.getBundle("processing.app.Resources", Locale.getDefault());
+      i18n = ResourceBundle.getBundle("processing.app.i18n.Resources", Locale.getDefault());
 
       PROMPT_YES = _("Yes");
       PROMPT_NO = _("No");
@@ -57,5 +57,19 @@ public class I18n {
 
   public static String format(String fmt, Object ... args) {
     return MessageFormat.format(fmt, args);
+  }
+  
+  /**
+   * Does nothing.
+   * 
+   * This method is an hack to extract words with gettext tool.
+   */
+  protected static void unusedStrings() {
+    // These phrases are defined in the "platform.txt".
+    _("Arduino AVR Boards");
+    _("Arduino ARM (32-bits) Boards");
+
+    // This word is defined in the "boards.txt".
+    _("Processor");
   }
 }

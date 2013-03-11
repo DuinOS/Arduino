@@ -128,6 +128,12 @@ public class EditorListener {
         event.consume();  // does nothing
         return false;
       }
+
+      // The char is not control code when CTRL key pressed? It should be a shortcut.
+      if (!Character.isISOControl(c)) {
+        event.consume();
+        return true;
+      }
     }
 
     if ((event.getModifiers() & KeyEvent.META_MASK) != 0) {
