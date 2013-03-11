@@ -125,10 +125,6 @@ msgstr "Monitor Serial"
 msgid "Board"
 msgstr "Placa"
 
-#: Editor.java:686
-msgid "Processor"
-msgstr "Processador"
-
 #: Editor.java:690
 msgid "Serial Port"
 msgstr "Porta Serial"

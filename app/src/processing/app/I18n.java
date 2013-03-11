@@ -14,7 +14,6 @@
 package processing.app;
 
 import java.util.*;
-import java.util.Locale.*;
 import java.text.MessageFormat;
 
 public class I18n {

@@ -486,8 +486,8 @@ public class EditorListener {
     char c = event.getKeyChar();
 
     if ((event.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
-      // on linux, ctrl-comma (prefs) being passed through to the editor
-      if (c == KeyEvent.VK_COMMA) {
+      // The char is not control code when CTRL key pressed? It should be a shortcut.
+      if (!Character.isISOControl(c)) {
         event.consume();
         return true;
       }
