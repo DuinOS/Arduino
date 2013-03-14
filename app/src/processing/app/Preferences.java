@@ -238,6 +238,8 @@ public class Preferences {
     table.put("runtime.hardware.path", hardwareFolder.getAbsolutePath());
     table.put("runtime.ide.path", hardwareFolder.getParentFile().getAbsolutePath());
     table.put("runtime.ide.version", "" + Base.REVISION);
+    table.put("duinos.version",""+ Base.REVISION_DUINOS);
+    table.put("freertos.version",""+ Base.REVISION_DUINOS); 
     
     // check for platform-specific properties in the defaults
     String platformExt = "." + Base.platform.getName();

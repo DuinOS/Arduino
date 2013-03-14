@@ -1,5 +1,6 @@
 
 ARDUINO 1.5.3 BETA
+DUINOS - FreeRTOS 7.4.0 
 
 [ide]
 * Removed useless baud rates from serial monitor

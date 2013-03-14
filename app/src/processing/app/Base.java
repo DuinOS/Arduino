@@ -53,8 +53,10 @@ import static processing.app.I18n._;
  */
 public class Base {
   public static final int REVISION = 153;
+  public static final int REVISION_DUINOS = 740;
   /** This might be replaced by main() if there's a lib/version.txt file. */
   static String VERSION_NAME = "0153";
+  static String VERSION_DUINOS_NAME = "0740";
   /** Set true if this a proper release rather than a numbered revision. */
   static public boolean RELEASE = false;
 
@@ -135,6 +137,13 @@ public class Base {
         if (!version.equals(VERSION_NAME)) {
           VERSION_NAME = version;
           RELEASE = true;
+        }
+      }
+      versionFile = getContentFile("lib/version_duinos.txt");
+      if (versionFile.exists()) {
+        String version = PApplet.loadStrings(versionFile)[0];
+        if (!version.equals(VERSION_DUINOS_NAME)) {
+          VERSION_DUINOS_NAME = version; 
         }
       }
     } catch (Exception e) {
@@ -1629,6 +1638,7 @@ public class Base {
           g.setFont(new Font("SansSerif", Font.PLAIN, 11));
           g.setColor(Color.white);
           g.drawString(Base.VERSION_NAME, 50, 30);
+          g.drawString(Base.VERSION_DUINOS_NAME, 50, 45);
         }
       };
     window.addMouseListener(new MouseAdapter() {

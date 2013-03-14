@@ -247,6 +247,10 @@ target_platform = avr
 board = uno
 software=ARDUINO
 
+# DUINOS + FREERTOS PREFERENCES
+duinos=DUINOS
+freertos=FREERTOS
+
 programmer = arduino:avrispmkii
 
 upload.using = bootloader
