@@ -290,7 +290,15 @@ const uint8_t PROGMEM digital_pin_to_timer_PGM[] = {
 	NOT_ON_TIMER	, // PE 1 ** 1 ** USART0_TX	
 	TIMER3B	, // PE 4 ** 2 ** PWM2	
 	TIMER3C	, // PE 5 ** 3 ** PWM3	
+/* CDCP - START
+ * disabled because DuinOS uses timer 0 for its kernel
+ */
+#ifdef DISABLED_BY_DUINOS
+	NOT_ON_TIMER,
+#else
 	TIMER0B	, // PG 5 ** 4 ** PWM4	
+#endif
+/* CDCP - END */
 	TIMER3A	, // PE 3 ** 5 ** PWM5	
 	TIMER4A	, // PH 3 ** 6 ** PWM6	
 	TIMER4B	, // PH 4 ** 7 ** PWM7	
@@ -299,7 +307,15 @@ const uint8_t PROGMEM digital_pin_to_timer_PGM[] = {
 	TIMER2A	, // PB 4 ** 10 ** PWM10	
 	TIMER1A	, // PB 5 ** 11 ** PWM11	
 	TIMER1B	, // PB 6 ** 12 ** PWM12	
-	TIMER0A	, // PB 7 ** 13 ** PWM13	
+/* CDCP - BEGIN
+ * disabled because DuinOS uses timer 0 for its kernel
+ */
+#ifdef DISABLED_BY_DUINOS
+	NOT_ON_TIMER,
+#else
+	TIMER0A	, // PB 7 ** 13 ** PWM13
+#endif
+/* CDCP - END
 	NOT_ON_TIMER	, // PJ 1 ** 14 ** USART3_TX	
 	NOT_ON_TIMER	, // PJ 0 ** 15 ** USART3_RX	
 	NOT_ON_TIMER	, // PH 1 ** 16 ** USART2_TX	

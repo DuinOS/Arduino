@@ -191,8 +191,17 @@ const uint8_t PROGMEM digital_pin_to_timer_PGM[] = {
 	NOT_ON_TIMER,
 	NOT_ON_TIMER,
 #else
+/* CDCP - BEGIN
+ * disabled because DuinOS uses timer 0 for its kernel
+ */
+#ifdef DISABLED_BY_DUINOS
+	NOT_ON_TIMER,
+	NOT_ON_TIMER,
+#else
 	TIMER0B,
 	TIMER0A,
+#endif
+/* CDCP - END */
 #endif
 	NOT_ON_TIMER,
 	NOT_ON_TIMER, /* 8 - port B */
