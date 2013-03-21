@@ -21,7 +21,7 @@ uno_DuinOS.build.mcu=atmega328p
 uno_DuinOS.build.f_cpu=16000000L
 uno_DuinOS.build.board=ARDUINO_UNO
 uno_DuinOS.build.core=duinos
-uno_DuinOS.build.variant=arduino:avr:standard
+uno_DuinOS.build.variant=standard
 
 ##############################################################
 mega2560_DuinOS.name=Arduino Mega 2560 or Mega ADK + DuinOS
@@ -43,7 +43,7 @@ mega2560_DuinOS.build.mcu=atmega2560
 mega2560_DuinOS.build.f_cpu=16000000L
 mega2560_DuinOS.build.board=ARDUINO_MEGA2560
 mega2560_DuinOS.build.core=duinos
-mega2560_DuinOS.build.variant=arduino:avr:mega
+mega2560_DuinOS.build.variant=mega
 
 ##############################################################
 mega_DuinOS.name=Arduino Mega (ATmega1280) + DuinOS
@@ -65,7 +65,7 @@ mega_DuinOS.build.mcu=atmega1280
 mega_DuinOS.build.f_cpu=16000000L
 mega_DuinOS.build.board=ARDUINO_MEGA
 mega_DuinOS.build.core=duinos
-mega_DuinOS.build.variant=arduino:avr:mega
+mega_DuinOS.build.variant=mega
 
 ##############################################################
 
