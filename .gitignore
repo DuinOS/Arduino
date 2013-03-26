@@ -31,3 +31,4 @@ test-bin
 app/bin/
 *.iml
 .idea
+/.pydevproject
