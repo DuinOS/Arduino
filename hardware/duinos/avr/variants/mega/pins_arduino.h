@@ -315,7 +315,7 @@ const uint8_t PROGMEM digital_pin_to_timer_PGM[] = {
 #else
 	TIMER0A	, // PB 7 ** 13 ** PWM13
 #endif
-/* CDCP - END
+/* CDCP - END */
 	NOT_ON_TIMER	, // PJ 1 ** 14 ** USART3_TX	
 	NOT_ON_TIMER	, // PJ 0 ** 15 ** USART3_RX	
 	NOT_ON_TIMER	, // PH 1 ** 16 ** USART2_TX	
