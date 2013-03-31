@@ -1,4 +1,20 @@
 
+ARDUINO 1.0.5 - 2013.03.29
+
+[core]
+
+* [avr] malloc bug: backported avr-libc 1.8.0 implementation
+* [avr] removed deprecated interrupt handlers causing compiler issues 
+  with newer avr-gcc.
+
+[libraries]
+
+* Upgrades to WiFi library
+
+[firmwares]
+
+* Upgrades to WiFi firmwares
+
 ARDUINO 1.0.4 - 2013.03.11
 
 [core]
