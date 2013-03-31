@@ -141,6 +141,27 @@ mega2560.build.variant=mega
 
 ##############################################################
 
+mega2560_duinos.name=Arduino Mega 2560 or Mega ADK + DuinOS
+
+mega2560_duinos.upload.protocol=wiring
+mega2560_duinos.upload.maximum_size=258048
+mega2560_duinos.upload.speed=115200
+
+mega2560_duinos.bootloader.low_fuses=0xFF
+mega2560_duinos.bootloader.high_fuses=0xD8
+mega2560_duinos.bootloader.extended_fuses=0xFD
+mega2560_duinos.bootloader.path=stk500v2
+mega2560_duinos.bootloader.file=stk500boot_v2_mega2560.hex
+mega2560_duinos.bootloader.unlock_bits=0x3F
+mega2560_duinos.bootloader.lock_bits=0x0F
+
+mega2560_duinos.build.mcu=atmega2560
+mega2560_duinos.build.f_cpu=16000000L
+mega2560_duinos.build.core=duinos
+mega2560_duinos.build.variant=mega
+
+##############################################################
+
 mega.name=Arduino Mega (ATmega1280)
 
 mega.upload.protocol=arduino
