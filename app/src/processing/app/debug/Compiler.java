@@ -133,11 +133,29 @@ public class Compiler implements MessageConsumer {
       throw re;
     }
 
+    // Check if the board needs a platform from another package 
     TargetPlatform targetPlatform = Base.getTargetPlatform();
+    TargetPlatform corePlatform = null;
+    PreferencesMap boardPreferences = Base.getBoardPreferences();
+    String core = boardPreferences.get("build.core");
+    if (core.contains(":")) {
+      String[] split = core.split(":");
+      core = split[1];
+      corePlatform = Base.getTargetPlatform(split[0], targetPlatform.getId());
+      if (corePlatform == null) {
+        RunnerException re = new RunnerException(I18n
+            .format(_("Selected board depends on '{0}' core (not installed)."),
+                    split[0]));
+        re.hideStackTrace();
+        throw re;
+      }
+    }
     
     // Merge all the global preference configuration in order of priority
     PreferencesMap p = new PreferencesMap();
     p.putAll(Preferences.getMap());
+    if (corePlatform != null)
+      p.putAll(corePlatform.getPreferences());
     p.putAll(targetPlatform.getPreferences());
     p.putAll(Base.getBoardPreferences());
     for (String k : p.keySet()) {
@@ -147,17 +165,17 @@ public class Compiler implements MessageConsumer {
 
     p.put("build.path", _buildPath);
     p.put("build.project_name", _primaryClassName);
-    targetArch = targetPlatform.getName();
+    targetArch = targetPlatform.getId();
     p.put("build.arch", targetArch.toUpperCase());
     
     if (!p.containsKey("compiler.path"))
       p.put("compiler.path", Base.getAvrBasePath());
 
     // Core folder
-    String core = p.get("build.core");
-    TargetPlatform tp;
-    if (!core.contains(":")) {
+    TargetPlatform tp = corePlatform;
+    if (tp == null)
       tp = targetPlatform;
+<<<<<<< HEAD
     } else {
       String[] split = core.split(":", 3);
       if(Array.getLength(split) == 2){
@@ -170,12 +188,15 @@ public class Compiler implements MessageConsumer {
         core = split[2];
       }
     }
+=======
+>>>>>>> refs/remotes/arduino/ide-1.5.x
     File coreFolder = new File(tp.getFolder(), "cores");
     coreFolder = new File(coreFolder, core);
+    p.put("build.core", core);
     p.put("build.core.path", coreFolder.getAbsolutePath());
     
     // System Folder
-    File systemFolder = targetPlatform.getFolder();
+    File systemFolder = tp.getFolder();
     systemFolder = new File(systemFolder, "system");
     p.put("build.system.path", systemFolder.getAbsolutePath());
     
@@ -186,6 +207,7 @@ public class Compiler implements MessageConsumer {
       if (!variant.contains(":")) {
         t = targetPlatform;
       } else {
+<<<<<<< HEAD
         
         String[] split = variant.split(":", 3);
         if(Array.getLength(split) == 2){
@@ -197,6 +219,11 @@ public class Compiler implements MessageConsumer {
               .getTargetPlatform(split[0], split[1]);
           variant = split[2];
         }
+=======
+        String[] split = variant.split(":", 2);
+        t = Base.getTargetPlatform(split[0], targetPlatform.getId());
+        variant = split[1];
+>>>>>>> refs/remotes/arduino/ide-1.5.x
       }
       File variantFolder = new File(t.getFolder(), "variants");
       variantFolder = new File(variantFolder, variant);

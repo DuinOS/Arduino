@@ -46,7 +46,7 @@
 	   defaultvalue="${revision}" />
     <input message="Enter DUINOS version number:"
 	   addproperty="version.DUINOS"
-	   defaultvalue="${revision.DUINOS}" />
+	   defaultvalue="${revision_DUINOS}" />
     <antcall target="${platform}-dist" />
   </target>
 
@@ -142,10 +142,10 @@
     </loadfile>
     <echo message="Latest revision detected in shared/revision.txt is: ${revision}" />
 
-    <loadfile srcfile="shared/revisions.txt" property="revision.DUINOS">
+    <loadfile srcfile="shared/revisions.txt" property="revision_DUINOS">
       <filterchain>
         <ignoreblank />
-        <headfilter lines="1"/>
+        <headfilter lines="1" skip="1"/>
         <tokenfilter>
           <linetokenizer includeDelims="false" />
           <!-- grab the thing from the first line that's 4 digits -->
@@ -157,7 +157,7 @@
         </tokenfilter>
       </filterchain>
     </loadfile>
-    <echo message="Latest revision detected in shared/revision.txt for DUINOS is: ${revision.DUINOS}" />
+    <echo message="Latest revision detected in shared/revision.txt for DUINOS is: ${revision_DUINOS}" />
     
     <!-- figure out the revision number in base.java -->
     <loadfile srcfile="../app/src/processing/app/Base.java"
@@ -383,7 +383,7 @@
     <replace file="macosx/work/Arduino.app/Contents/Info.plist"
              token="REVISION" value="${revision}" />
 	<replace file="macosx/work/Arduino.app/Contents/Info.plist"
-             token="REVISION_DUINOS" value="${revision.DUINOS}" />
+             token="REVISION_DUINOS" value="${revision_DUINOS}" />
     
     <exec executable="zip" dir="macosx/work">
       <arg line="-q -r ../arduino-${version}-duinos+freertos${version.DUINOS}-${platform}.zip ." />
@@ -834,7 +834,7 @@
 	   defaultvalue="${revision}" />
     <input message="Enter DUINOS version number:"
         addproperty="version.DUINOS"
-        defaultvalue="${revision.DUINOS}" />
+        defaultvalue="${revision_DUINOS}" />
 
     <tar compression="gzip" destfile="arduino-${version}-duinos+freertos${version.DUINOS}-${plataform}-src.tar.gz">
       <tarfileset dir="../"
