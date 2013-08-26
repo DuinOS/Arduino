@@ -105,6 +105,7 @@
     
     <!-- Write the revision file! -->
     <echo file="${target.path}/lib/version.txt" message="${version}" />
+    <echo file="${target.path}/lib/DUINOS.txt" message="${version.DUINOS}" />
   </target>
 
   
@@ -125,7 +126,7 @@
     </loadfile>
     <!-- <echo message="revision is ${revision}." /> -->
     
-    <loadfile srcfile="../todo.txt" property="revision_DUINOS">
+    <loadfile srcfile="../todo.txt" property="revision.DUINOS">
       <filterchain>
 	<headfilter lines="1" skip="1"/>
 	<tokenfilter>
@@ -135,7 +136,7 @@
 	</tokenfilter>
       </filterchain>
     </loadfile>
-    <!-- <echo message="revision is ${revision_DUINOS}." /> -->
+    <!-- <echo message="DuinOS revision is ${revision.DUINOS}." /> -->
     
     <!-- figure out the revision number in base.java -->
     <loadfile srcfile="../app/src/processing/app/Base.java" 
@@ -174,6 +175,18 @@
 	 if $revision wasn't found... -->
     <fail unless="revision.correct" 
 	  message="Fix revision number in Base.java" />
+  	
+
+    <condition property="revision.DUINOS.correct">
+      <!-- Using contains because I can't figure out how to get rid of the
+	   LF in revision.base. Please file a bug if you have a fix. -->
+      <contains string="${revision.DUINOS.base}" substring="${revision.DUINOS}"/>
+    </condition>
+    
+    <!-- the revision.DUINOS.base property won't be set
+	 if $revision wasn't found... -->
+    <fail unless="revision.DUINOS.correct" 
+	  message="Fix revision DUINOS number in Base.java" />
   </target>
   
   
@@ -264,19 +277,19 @@
     <replace file="macosx/work/Arduino.app/Contents/Info.plist"
              token="REVISION" value="${revision}" />
     <replace file="macosx/work/Arduino.app/Contents/Info.plist"
-             token="VERSION_DUINOS" value="${version_DUINOS}" />
+             token="VERSION_DUINOS" value="${version.DUINOS}" />
     <replace file="macosx/work/Arduino.app/Contents/Info.plist"
-             token="REVISION_DUINOS" value="${revision_DUINOS}" />
+             token="REVISION_DUINOS" value="${revision.DUINOS}" />
     
     <exec executable="ditto" dir="macosx/work">
-      <arg line="-c -k -rsrc . ../arduino-${version}-duinos+freertos${version.DUINOS}-${platform}.zip" />
+      <arg line="-c -k -rsrc . ../arduino-${version}-duinos+freertos-${version.DUINOS}-${platform}.zip" />
     </exec>
 
     <echo>
       =======================================================
       Arduino for Mac OS X was built. Grab the image from   
       
-      macosx/arduino-${version}-duinos+freertos${version.DUINOS}-${platform}.zip
+      macosx/arduino-${version}-duinos+freertos-${version.DUINOS}-${platform}.zip
       =======================================================
     </echo>
   </target>
@@ -319,7 +332,7 @@
   
     <delete file="macosx/arduino-*.dmg" />
     <exec executable="hdiutil">
-      <arg line="convert macosx/working.dmg -quiet -format UDZO -imagekey zlib-level=9 -o macosx/arduino-${version}.dmg" />
+      <arg line="convert macosx/working.dmg -quiet -format UDZO -imagekey zlib-level=9 -o macosx/arduino-${version}-duinos+freertos-{version.DUINOS}.dmg" />
     </exec>
 
     <!-- Clean up the interim files. -->
@@ -330,7 +343,7 @@
       =======================================================
       Arduino for Mac OS X was built. Grab the image from   
       
-      macosx/arduino-${version}.dmg
+      macosx/arduino-${version}-duinos+freertos-${version.DUINOS}.dmg
       =======================================================
     </echo>
   </target>
@@ -443,23 +456,23 @@
 		  prefix="arduino-${version}/hardware/tools" />
     </tar>
 -->
-    <move file="linux/work" tofile="linux/arduino-${version}" />
+    <move file="linux/work" tofile="linux/arduino-${version}-duinos-freertos-${version.DUINOS}" />
 
     <exec executable="tar" dir="linux">
       <arg value="-z"/>
       <arg value="-c"/>
       <arg value="-f"/>
-      <arg value="arduino-${version}-duinos+freertos${version.DUINOS}-${platform}.tgz"/>
-      <arg value="arduino-${version}-duinos+freertos${version.DUINOS}"/>
+      <arg value="arduino-${version}-duinos+freertos-${version.DUINOS}-${platform}.tgz"/>
+      <arg value="arduino-${version}-duinos+freertos-${version.DUINOS}"/>
     </exec>
 
-    <move file="linux/arduino-${version}-duinos+freertos${version.DUINOS}" tofile="linux/work" />
+    <move file="linux/arduino-${version}-duinos+freertos-${version.DUINOS}" tofile="linux/work" />
 
     <echo>
       =======================================================
       Arduino for Linux was built. Grab the archive from
 
-      build/linux/arduino-${version}-duinos+freertos${version.DUINOS}-${platform}.tgz
+      build/linux/arduino-${version}-duinos+freertos-${version.DUINOS}-${platform}.tgz
       =======================================================
     </echo>
   </target>
@@ -563,21 +576,21 @@
     <!--
     <zip basedir="windows/work" 
 	 prefix="arduino-${version}"
-	 destfile="windows/arduino-${version}-duinos+freertos${version.DUINOS}-${platform}.zip" />
+	 destfile="windows/arduino-${version}-duinos+freertos-${version.DUINOS}-${platform}.zip" />
     <zip basedir="windows/work" 
 	 prefix="arduino-${version}"
-	 destfile="windows/arduino-${version}-duinos+freertos${version.DUINOS}-${platform}-expert.zip" 
+	 destfile="windows/arduino-${version}-duinos+freertos-${version.DUINOS}-${platform}-expert.zip" 
 	 excludes="java/**" />
     -->
 
-    <zip destfile="windows/arduino-${version}-duinos+freertos${version.DUINOS}-${platform}.zip" level="9">
+    <zip destfile="windows/arduino-${version}-duinos+freertos-${version.DUINOS}-${platform}.zip" level="9">
       <zipfileset dir="windows/work"
-		  prefix="arduino-${version}-duinos+freertos${version.DUINOS}" />
+		  prefix="arduino-${version}-duinos+freertos-${version.DUINOS}" />
     </zip>
 
-    <zip destfile="windows/arduino-${version}-${platform}-expert.zip" level="9">
+    <zip destfile="windows/arduino-${version}-duinos+freertos-${version.DUINOS}-${platform}-expert.zip" level="9">
       <zipfileset dir="windows/work"
-		  prefix="arduino-${version}-duinos+freertos${version.DUINOS}"
+		  prefix="arduino-${version}-duinos+freertos-${version.DUINOS}"
 		  excludes="java/**" />
     </zip>
     
@@ -585,8 +598,8 @@
       =======================================================
       Arduino for Windows was built. Grab the archive from
 
-      windows/arduino-${version}-duinos+freertos${version.DUINOS}-${platform}.zip
-      windows/arduino-${version}-duinos+freertos${version.DUINOS}-${platform}-expert.zip
+      windows/arduino-${version}-duinos+freertos-${version.DUINOS}-${platform}.zip
+      windows/arduino-${version}-duinos+freertos-${version.DUINOS}-${platform}-expert.zip
       =======================================================
     </echo>
   </target>
@@ -602,12 +615,12 @@
 	   addproperty="version"
 	   defaultvalue="${revision}" />
 	<input message="Enter DUINOS version number:"
-        addproperty="version_DUINOS"
-        defaultvalue="${revision_DUINOS}" />
+        addproperty="version.DUINOS"
+        defaultvalue="${revision.DUINOS}" />
 
-    <tar compression="gzip" destfile="arduino-${version}-duinos+freertos${version.DUINOS}-${plataform}-src.tar.gz">
+    <tar compression="gzip" destfile="arduino-${version}-duinos+freertos-${version.DUINOS}-${plataform}-src.tar.gz">
       <tarfileset dir="../"
-		  prefix="arduino-${version}-duinos+freertos${version.DUINOS}"
+		  prefix="arduino-${version}-duinos+freertos-${version.DUINOS}"
 		  excludes="**/*.tgz,
 			     **/*.bz2,
 			     **/build/macosx/,
@@ -622,7 +635,7 @@
       =======================================================
       Arduino source distribution was built. Grab the archive from
 
-      arduino-${version}-duinos+freertos${version.DUINOS}-${plataform}-src.tar.gz
+      arduino-${version}-duinos+freertos-${version.DUINOS}-${plataform}-src.tar.gz
       =======================================================
     </echo>
   </target>
