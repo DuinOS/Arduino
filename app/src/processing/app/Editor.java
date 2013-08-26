@@ -23,6 +23,7 @@
 package processing.app;
 
 import processing.app.debug.*;
+import processing.app.helpers.PreferencesMapException;
 import processing.app.syntax.*;
 import processing.app.tools.*;
 import processing.core.*;
@@ -645,6 +646,7 @@ public class Editor extends JFrame implements RunnerListener {
 
     if (importMenu == null) {
       importMenu = new JMenu(_("Import Library..."));
+      MenuScroller.setScrollerFor(importMenu);
       base.rebuildImportMenu(importMenu, this);
     }
     sketchMenu.add(importMenu);
@@ -2433,6 +2435,10 @@ public class Editor extends JFrame implements RunnerListener {
         if (serialMenu.getItemCount() == 0) statusError(e);
         else if (serialPrompt()) run();
         else statusNotice(_("Upload canceled."));
+      } catch (PreferencesMapException e) {
+        statusError(I18n.format(
+                    _("Error while uploading: missing '{0}' configuration parameter"),
+                    e.getMessage()));
       } catch (RunnerException e) {
         //statusError("Error during upload.");
         //e.printStackTrace();
@@ -2469,6 +2475,10 @@ public class Editor extends JFrame implements RunnerListener {
         if (serialMenu.getItemCount() == 0) statusError(e);
         else if (serialPrompt()) run();
         else statusNotice(_("Upload canceled."));
+      } catch (PreferencesMapException e) {
+        statusError(I18n.format(
+                    _("Error while uploading: missing '{0}' configuration parameter"),
+                    e.getMessage()));
       } catch (RunnerException e) {
         //statusError("Error during upload.");
         //e.printStackTrace();
@@ -2544,9 +2554,10 @@ public class Editor extends JFrame implements RunnerListener {
             statusError(_("Error while burning bootloader."));
             // error message will already be visible
           }
-        } catch (RunnerException e) {
-          statusError(_("Error while burning bootloader."));
-          e.printStackTrace();
+        } catch (PreferencesMapException e) {
+          statusError(I18n.format(
+                      _("Error while burning bootloader: missing '{0}' configuration parameter"),
+                      e.getMessage()));
           //statusError(e);
         } catch (Exception e) {
           statusError(_("Error while burning bootloader."));

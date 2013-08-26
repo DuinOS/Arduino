@@ -35,8 +35,8 @@ import java.util.Collection;
 import processing.app.I18n;
 import processing.app.Preferences;
 import processing.app.Serial;
-import processing.app.SerialException;
 import processing.app.SerialNotFoundException;
+import processing.app.helpers.ProcessUtils;
 
 public abstract class Uploader implements MessageConsumer  {
   static final String BUGS_URL =
@@ -52,11 +52,11 @@ public abstract class Uploader implements MessageConsumer  {
   boolean verbose;
 
   public abstract boolean uploadUsingPreferences(String buildPath, String className, boolean usingProgrammer)
-    throws RunnerException, SerialException;
+    throws Exception;
   
-  public abstract boolean burnBootloader() throws RunnerException;
+  public abstract boolean burnBootloader() throws Exception;
   
-  protected void flushSerialBuffer() throws RunnerException, SerialException {
+  protected void flushSerialBuffer() throws Exception {
     // Cleanup the serial buffer
     try {
       Serial serialPort = new Serial();
@@ -87,14 +87,14 @@ public abstract class Uploader implements MessageConsumer  {
   }
 
   protected boolean executeUploadCommand(Collection<String> commandDownloader)
-      throws RunnerException {
+      throws Exception {
     String[] commandArray = new String[commandDownloader.size()];
     commandDownloader.toArray(commandArray);
     return executeUploadCommand(commandArray);
   }
 
   protected boolean executeUploadCommand(String commandArray[]) 
-    throws RunnerException
+    throws Exception
   {
     firstErrorFound = false;  // haven't found any errors yet
     secondErrorFound = false;
@@ -108,7 +108,7 @@ public abstract class Uploader implements MessageConsumer  {
         }
         System.out.println();
       }
-      Process process = Runtime.getRuntime().exec(commandArray);
+      Process process = ProcessUtils.exec(commandArray);
       new MessageSiphon(process.getInputStream(), this);
       new MessageSiphon(process.getErrorStream(), this);
 

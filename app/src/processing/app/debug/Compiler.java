@@ -40,6 +40,7 @@ import processing.app.Preferences;
 import processing.app.Sketch;
 import processing.app.SketchCode;
 import processing.app.helpers.PreferencesMap;
+import processing.app.helpers.ProcessUtils;
 import processing.app.helpers.StringReplacer;
 import processing.app.helpers.filefilters.OnlyDirs;
 import processing.app.packages.Library;
@@ -373,9 +374,8 @@ public class Compiler implements MessageConsumer {
     secondErrorFound = false;
 
     Process process;
-    
     try {
-      process = Runtime.getRuntime().exec(command);
+      process = ProcessUtils.exec(command);
     } catch (IOException e) {
       RunnerException re = new RunnerException(e.getMessage());
       re.hideStackTrace();

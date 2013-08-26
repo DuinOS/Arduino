@@ -233,10 +233,11 @@ leonardo.build.mcu=atmega32u4
 leonardo.build.f_cpu=16000000L
 leonardo.build.vid=0x2341
 leonardo.build.pid=0x8036
+leonardo.build.usb_product="Arduino Leonardo"
 leonardo.build.board=AVR_LEONARDO
 leonardo.build.core=arduino
 leonardo.build.variant=leonardo
-leonardo.build.extra_flags=-DUSB_VID={build.vid} -DUSB_PID={build.pid}
+leonardo.build.extra_flags={build.usb_flags}
 
 ##############################################################
 
@@ -262,10 +263,11 @@ micro.build.mcu=atmega32u4
 micro.build.f_cpu=16000000L
 micro.build.vid=0x2341
 micro.build.pid=0x8037
+micro.build.usb_product="Arduino Micro"
 micro.build.board=AVR_MICRO
 micro.build.core=arduino
 micro.build.variant=micro
-micro.build.extra_flags=-DUSB_VID={build.vid} -DUSB_PID={build.pid}
+micro.build.extra_flags={build.usb_flags}
 
 ##############################################################
 
@@ -291,10 +293,11 @@ esplora.build.mcu=atmega32u4
 esplora.build.f_cpu=16000000L
 esplora.build.vid=0x2341
 esplora.build.pid=0x803c
+esplora.build.usb_product="Arduino Esplora"
 esplora.build.board=AVR_ESPLORA
 esplora.build.core=arduino
 esplora.build.variant=leonardo
-esplora.build.extra_flags=-DUSB_VID={build.vid} -DUSB_PID={build.pid}
+esplora.build.extra_flags={build.usb_flags}
 
 ##############################################################
 
@@ -452,15 +455,15 @@ LilyPadUSB.bootloader.extended_fuses=0xce
 LilyPadUSB.bootloader.file=caterina-LilyPadUSB/Caterina-LilyPadUSB.hex
 LilyPadUSB.bootloader.unlock_bits=0x3F
 LilyPadUSB.bootloader.lock_bits=0x2F
-
 LilyPadUSB.build.mcu=atmega32u4
 LilyPadUSB.build.f_cpu=8000000L
 LilyPadUSB.build.vid=0x1B4F
 LilyPadUSB.build.pid=0x9208
+LilyPadUSB.build.usb_product="LilyPad USB"
 LilyPadUSB.build.board=AVR_LILYPAD_USB
 LilyPadUSB.build.core=arduino
 LilyPadUSB.build.variant=leonardo
-LilyPadUSB.build.extra_flags=-DUSB_VID={build.vid} -DUSB_PID={build.pid}
+LilyPadUSB.build.extra_flags={build.usb_flags}
 
 ##############################################################
 
@@ -630,4 +633,64 @@ atmegang.menu.cpu.atmega8.bootloader.high_fuses=0xca
 atmegang.menu.cpu.atmega8.bootloader.file=atmega8/ATmegaBOOT-prod-firmware-2009-11-07.hex
 
 atmegang.menu.cpu.atmega8.build.mcu=atmega8
+
+##############################################################
+
+robotControl.name=Arduino Robot Control
+robotControl.upload.tool=avrdude
+robotControl.upload.protocol=avr109
+robotControl.upload.maximum_size=28672
+robotControl.upload.data_size=2560
+robotControl.upload.speed=57600
+robotControl.upload.disable_flushing=true
+robotControl.upload.use_1200bps_touch=true
+robotControl.upload.wait_for_upload_port=true
+
+robotControl.bootloader.tool=avrdude
+robotControl.bootloader.low_fuses=0xff
+robotControl.bootloader.high_fuses=0xd8
+robotControl.bootloader.extended_fuses=0xcb
+robotControl.bootloader.file=caterina-Arduino_Robot/Caterina-Robot-Control.hex
+robotControl.bootloader.unlock_bits=0x3F
+robotControl.bootloader.lock_bits=0x2F
+
+robotControl.build.mcu=atmega32u4
+robotControl.build.f_cpu=16000000L
+robotControl.build.vid=0x2341
+robotControl.build.pid=0x8038
+robotControl.build.usb_product="Robot Control"
+robotControl.build.board=AVR_ROBOT_CONTROL
+robotControl.build.core=arduino
+robotControl.build.variant=robot_control
+robotControl.build.extra_flags={build.usb_flags}
+
+##############################################################
+
+robotMotor.name=Arduino Robot Motor
+robotMotor.upload.tool=avrdude
+robotMotor.upload.protocol=avr109
+robotMotor.upload.maximum_size=28672
+robotMotor.upload.data_size=2560
+robotMotor.upload.speed=57600
+robotMotor.upload.disable_flushing=true
+robotMotor.upload.use_1200bps_touch=true
+robotMotor.upload.wait_for_upload_port=true
+
+robotMotor.bootloader.tool=avrdude
+robotMotor.bootloader.low_fuses=0xff
+robotMotor.bootloader.high_fuses=0xd8
+robotMotor.bootloader.extended_fuses=0xcb
+robotMotor.bootloader.file=caterina-Arduino_Robot/Caterina-Robot-Motor.hex
+robotMotor.bootloader.unlock_bits=0x3F
+robotMotor.bootloader.lock_bits=0x2F
+
+robotMotor.build.mcu=atmega32u4
+robotMotor.build.f_cpu=16000000L
+robotMotor.build.vid=0x2341
+robotMotor.build.pid=0x8039
+robotMotor.build.usb_product="Robot Motor"
+robotMotor.build.board=AVR_ROBOT_MOTOR
+robotMotor.build.core=arduino
+robotMotor.build.variant=robot_motor
+robotMotor.build.extra_flags={build.usb_flags}
 

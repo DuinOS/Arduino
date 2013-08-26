@@ -8,6 +8,10 @@ DUINOS - FreeRTOS 7.4.0
 * Added support for new 1.5 Library format (https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5:-Library-specification)
 * Pass board type from boards.txt (https://github.com/arduino/Arduino/issues/308)
 * Display estimated RAM usage after compile (Loren M. Lang)
+* Updated arm gcc to 4.7.4 and simplified build.xml
+* ARM gcc doesn't require ia32-libs anymore on 64 bits linux systems
+* Import library menu is now scrollable
+* Scrollable menus can now be scrolled with the mouse wheel
 
 [arduino core]
 * sam: Fixed delayMicrosecond() when interrupts are disabled
@@ -15,12 +19,26 @@ DUINOS - FreeRTOS 7.4.0
 * sam: Added compatibility for avr/pgmspace.h (Paul Stoffregen)
 * sam: Added serialEvent*() support
 * sam: Fixed micros() to work with inside interrupts. (stimmer)
+* avr: Added support for Flash strings on String class (Jantje)
+* Added support for floating point numbers in String class (Tevin Zhang, SebiTimeWaster)
+* sam: Fixed String buffer overflows (Paul Stoffregen)
+* avr: Added recipe for assembly files (C. A. Church)
+* avr: Use analogPinToChannel if it's defined (Kristian Sloth Lauszus)
+* avr: Optimized HardwareSerial buffer (Matthijs Kooijman)
+* removed unused flags from String (free 1 byte of SRAM)
 
 [libraries]
 * sam: Added CAN library (still in early stage of development) (Palliser)
+* sam: Bugfix SPI library: begin() after end() now works (stimmer)
+* sam: Bugfix SPI library: incorrent pin configuration in non-extended mode.
+* Ported all libraries to new 1.5 format
+* Updated Firmata to version 2.3.6 (Jeff Hoefs)
 
 [firmwares]
 * Arduino Due: fixed USB2Serial garbage at startup (https://github.com/arduino/Arduino/pull/1267)
+
+[other]
+* Merged all improvements made in Arduino IDE 1.0.5
 
 ARDUINO 1.5.2 BETA - 2013.02.06
 
@@ -57,7 +75,7 @@ ARDUINO 1.5.2 BETA - 2013.02.06
 
 [other]
 * Merged all improvements made in Arduino IDE 1.0.3
-* Merged all improvements made in Arduino IDE 1.0.4 (not yet released)
+* Merged all improvements made in Arduino IDE 1.0.4
 
 ARDUINO 1.5.1r2 BETA - 2012.11.06
 
@@ -113,6 +131,8 @@ ARDUINO 1.0.5 - 2013.05.15
 
 * Upgrades to WiFi library
 * Fixed a bunch of examples
+* Added Arduino Robot libraries
+* Added TFT display library
 
 [firmwares]
 
@@ -121,7 +141,6 @@ ARDUINO 1.0.5 - 2013.05.15
 [ide]
 
 * Backport from 1.5: install Library from .zip file or folder
-* Added button "Copy error to clipboard" (Paul Stoffregen)
 * Updated windows drivers
 * Added Windows installer
 
@@ -130,6 +149,7 @@ ARDUINO 1.0.4 - 2013.03.11
 [core]
 
 * Fixed malloc bug (Paul Stoffregen)
+* Added INT6 support for Leonardo (Federico Vanzati)
 
 [libraries]
 
