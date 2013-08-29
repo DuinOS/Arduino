@@ -1,48 +1,37 @@
 /*
-    FreeRTOS V7.4.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.5.2 - Copyright (C) 2013 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
-    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
+    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
-     *    FreeRTOS tutorial books are available in pdf and paperback.        *
-     *    Complete, revised, and edited pdf reference manuals are also       *
-     *    available.                                                         *
+     *    FreeRTOS provides completely free yet professionally developed,    *
+     *    robust, strictly quality controlled, supported, and cross          *
+     *    platform software that has become a de facto standard.             *
      *                                                                       *
-     *    Purchasing FreeRTOS documentation will not only help you, by       *
-     *    ensuring you get running as quickly as possible and with an        *
-     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
-     *    the FreeRTOS project to continue with its mission of providing     *
-     *    professional grade, cross platform, de facto standard solutions    *
-     *    for microcontrollers - completely free of charge!                  *
+     *    Help yourself get started quickly and support the FreeRTOS         *
+     *    project by purchasing a FreeRTOS tutorial book, reference          *
+     *    manual, or both from: http://www.FreeRTOS.org/Documentation        *
      *                                                                       *
-     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
-     *                                                                       *
-     *    Thank you for using FreeRTOS, and thank you for your support!      *
+     *    Thank you!                                                         *
      *                                                                       *
     ***************************************************************************
-
 
     This file is part of the FreeRTOS distribution.
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
-    distribute a combined work that includes FreeRTOS without being obliged to
-    provide the source code for proprietary components outside of the FreeRTOS
-    kernel.
+    >>! NOTE: The modification to the GPL is included to allow you to distribute
+    >>! a combined work that includes FreeRTOS without being obliged to provide
+    >>! the source code for proprietary components outside of the FreeRTOS
+    >>! kernel.
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-    details. You should have received a copy of the GNU General Public License
-    and the FreeRTOS license exception along with FreeRTOS; if not itcan be
-    viewed here: http://www.freertos.org/a00114.html and also obtained by
-    writing to Real Time Engineers Ltd., contact details for whom are available
-    on the FreeRTOS WEB site.
+    FOR A PARTICULAR PURPOSE.  Full license text is available from the following
+    link: http://www.freertos.org/a00114.html
 
     1 tab == 4 spaces!
 
@@ -55,21 +44,22 @@
      *                                                                       *
     ***************************************************************************
 
-
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, and our new
-    fully thread aware and reentrant UDP/IP stack.
+    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
+    compatible FAT file system, and our tiny thread aware UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
-    indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems to sell under the OpenRTOS brand.  Low cost OpenRTOS
+    licenses offer ticketed support, indemnification and middleware.
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
+
+    1 tab == 4 spaces!
 */
 
 /* 
@@ -266,10 +256,10 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
  * __AVR_3_BYTE_PC__ is not official, and only exist after version 4.1 of GCC
  */
 #if defined(__AVR_HAVE_RAMPZ__) || defined(__AVR_3_BYTE_PC__)
-        unsigned portLONG usAddress; // ATMega2560 have 17bit Program Counter register
+        unsigned long usAddress; // ATMega2560 have 17bit Program Counter register
         							 // Other future uControler can have up 22, or 24 bits.
 #else
-        unsigned portSHORT usAddress; // over ATmega have 16bit Program Counter register
+        unsigned short usAddress; // over ATmega have 16bit Program Counter register
 #endif
 
 
@@ -293,29 +283,29 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
  */
 #if defined(__AVR_HAVE_RAMPZ__) || defined(__AVR_3_BYTE_PC__)
     // Implement normal stack initialisation but with portLONG instead of portSHORT
-        usAddress = ( unsigned portLONG ) pxCode;
-        *pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned portLONG ) 0x000000ff );
+        usAddress = ( unsigned long ) pxCode;
+        *pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned long ) 0x000000ff );
         pxTopOfStack--;
 
         usAddress >>= 8;
-        *pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned portLONG ) 0x000000ff );
+        *pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned long ) 0x000000ff );
         pxTopOfStack--;
 
         // Implemented the 3byte addressing
         usAddress >>= 8;
-        *pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned portLONG ) 0x000000ff );
+        *pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned long ) 0x000000ff );
         pxTopOfStack--;
 
 // Normal initialisation for over ATmega
 #else
 	/* The start of the task code will be popped off the stack last, so place
 	it on first. */
-	usAddress = ( unsigned portSHORT ) pxCode;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned portSHORT ) 0x00ff );
+	usAddress = ( unsigned short ) pxCode;
+	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
 	pxTopOfStack--;
 
 	usAddress >>= 8;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned portSHORT ) 0x00ff );
+	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
 	pxTopOfStack--;
 #endif
 
@@ -395,12 +385,12 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 
 	/* Place the parameter on the stack in the expected location. */
-	usAddress = ( unsigned portSHORT ) pvParameters;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned portSHORT ) 0x00ff );
+	usAddress = ( unsigned short ) pvParameters;
+	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
 	pxTopOfStack--;
 
 	usAddress >>= 8;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned portSHORT ) 0x00ff );
+	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
 	pxTopOfStack--;
 
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x26;	/* R26 X */
@@ -471,8 +461,10 @@ void vPortYieldFromTick( void ) __attribute__ ( ( naked ) );
 void vPortYieldFromTick( void )
 {
 	portSAVE_CONTEXT();
-	vTaskIncrementTick();
-	vTaskSwitchContext();
+	if( xTaskIncrementTick() != pdFALSE )
+	{
+		vTaskSwitchContext();
+	}
 	portRESTORE_CONTEXT();
 
 	asm volatile ( "ret" );
@@ -480,46 +472,41 @@ void vPortYieldFromTick( void )
 /*-----------------------------------------------------------*/
 
 /*
- * Setup timer 0 compare match A to generate a tick interrupt.
+ * Setup timer 1 compare match A to generate a tick interrupt.
  */
 static void prvSetupTimerInterrupt( void )
 {
-	// on the ATmega168, timer 0 is also used for fast hardware pwm
-	// (using phase-correct PWM would mean that timer 0 overflowed half as often
-	// resulting in different millis() behavior on the ATmega8 and ATmega168)
-#if defined(TCCR0A) && defined(WGM01)
-	sbi(TCCR0A, WGM01);
-	sbi(TCCR0A, WGM00);
-#endif  
+unsigned long ulCompareMatch;
+unsigned char ucHighByte, ucLowByte;
 
-	// set timer 0 prescale factor to 64
-#if defined(__AVR_ATmega128__)
-	// CPU specific: different values for the ATmega128
-	sbi(TCCR0, CS02);
-#elif defined(TCCR0) && defined(CS01) && defined(CS00)
-	// this combination is for the standard atmega8
-	sbi(TCCR0, CS01);
-	sbi(TCCR0, CS00);
-#elif defined(TCCR0B) && defined(CS01) && defined(CS00)
-	// this combination is for the standard 168/328/1280/2560
-	sbi(TCCR0B, CS01);
-	sbi(TCCR0B, CS00);
-#elif defined(TCCR0A) && defined(CS01) && defined(CS00)
-	// this combination is for the __AVR_ATmega645__ series
-	sbi(TCCR0A, CS01);
-	sbi(TCCR0A, CS00);
-#else
-	#error Timer 0 prescale factor 64 not set correctly
-#endif
+	/* Using 16bit timer 1 to generate the tick.  Correct fuses must be
+	selected for the configCPU_CLOCK_HZ clock. */
 
-	// enable timer 0 overflow interrupt
-#if defined(TIMSK) && defined(TOIE0)
-	sbi(TIMSK, TOIE0);
-#elif defined(TIMSK0) && defined(TOIE0)
-	sbi(TIMSK0, TOIE0);
-#else
-	#error	Timer 0 overflow interrupt not set correctly
-#endif
+	ulCompareMatch = configCPU_CLOCK_HZ / configTICK_RATE_HZ;
+
+	/* We only have 16 bits so have to scale to get our required tick rate. */
+	ulCompareMatch /= portCLOCK_PRESCALER;
+
+	/* Adjust for correct value. */
+	ulCompareMatch -= ( unsigned long ) 1;
+
+	/* Setup compare match value for compare match A.  Interrupts are disabled 
+	before this is called so we need not worry here. */
+	ucLowByte = ( unsigned char ) ( ulCompareMatch & ( unsigned long ) 0xff );
+	ulCompareMatch >>= 8;
+	ucHighByte = ( unsigned char ) ( ulCompareMatch & ( unsigned long ) 0xff );
+	OCR1AH = ucHighByte;
+	OCR1AL = ucLowByte;
+
+	/* Setup clock source and compare match behaviour. */
+	ucLowByte = portCLEAR_COUNTER_ON_MATCH | portPRESCALE_64;
+	TCCR1B = ucLowByte;
+
+	/* Enable the interrupt - this is okay as interrupt are currently globally
+	disabled. */
+	ucLowByte = TIMSK;
+	ucLowByte |= portCOMPARE_MATCH_A_INTERRUPT_ENABLE;
+	TIMSK = ucLowByte;
 }
 /*-----------------------------------------------------------*/
 
@@ -564,7 +551,7 @@ static void prvSetupTimerInterrupt( void )
 		void TIMER0_OVF_vect(void)
 	#endif
 	{
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 	}
 #endif
 
