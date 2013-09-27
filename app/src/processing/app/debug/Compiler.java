@@ -25,6 +25,7 @@ package processing.app.debug;
 
 import static processing.app.I18n._;
 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -45,6 +46,7 @@ import processing.app.helpers.StringReplacer;
 import processing.app.helpers.filefilters.OnlyDirs;
 import processing.app.packages.Library;
 import processing.core.PApplet;
+
 
 public class Compiler implements MessageConsumer {
   static final String BUGS_URL =
@@ -174,9 +176,8 @@ public class Compiler implements MessageConsumer {
 
     // Core folder
     TargetPlatform tp = corePlatform;
-    if (tp == null)
+    if (tp == null){
       tp = targetPlatform;
-<<<<<<< HEAD
     } else {
       String[] split = core.split(":", 3);
       if(Array.getLength(split) == 2){
@@ -189,8 +190,6 @@ public class Compiler implements MessageConsumer {
         core = split[2];
       }
     }
-=======
->>>>>>> refs/remotes/arduino/ide-1.5.x
     File coreFolder = new File(tp.getFolder(), "cores");
     coreFolder = new File(coreFolder, core);
     p.put("build.core", core);
@@ -208,7 +207,6 @@ public class Compiler implements MessageConsumer {
       if (!variant.contains(":")) {
         t = targetPlatform;
       } else {
-<<<<<<< HEAD
         
         String[] split = variant.split(":", 3);
         if(Array.getLength(split) == 2){
@@ -220,11 +218,6 @@ public class Compiler implements MessageConsumer {
               .getTargetPlatform(split[0], split[1]);
           variant = split[2];
         }
-=======
-        String[] split = variant.split(":", 2);
-        t = Base.getTargetPlatform(split[0], targetPlatform.getId());
-        variant = split[1];
->>>>>>> refs/remotes/arduino/ide-1.5.x
       }
       File variantFolder = new File(t.getFolder(), "variants");
       variantFolder = new File(variantFolder, variant);
