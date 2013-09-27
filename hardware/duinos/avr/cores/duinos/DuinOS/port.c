@@ -472,41 +472,46 @@ void vPortYieldFromTick( void )
 /*-----------------------------------------------------------*/
 
 /*
- * Setup timer 1 compare match A to generate a tick interrupt.
+ * Setup timer 0 compare match A to generate a tick interrupt.
  */
 static void prvSetupTimerInterrupt( void )
 {
-unsigned long ulCompareMatch;
-unsigned char ucHighByte, ucLowByte;
+	// on the ATmega168, timer 0 is also used for fast hardware pwm
+	// (using phase-correct PWM would mean that timer 0 overflowed half as often
+	// resulting in different millis() behavior on the ATmega8 and ATmega168)
+#if defined(TCCR0A) && defined(WGM01)
+	sbi(TCCR0A, WGM01);
+	sbi(TCCR0A, WGM00);
+#endif  
 
-	/* Using 16bit timer 1 to generate the tick.  Correct fuses must be
-	selected for the configCPU_CLOCK_HZ clock. */
+	// set timer 0 prescale factor to 64
+#if defined(__AVR_ATmega128__)
+	// CPU specific: different values for the ATmega128
+	sbi(TCCR0, CS02);
+#elif defined(TCCR0) && defined(CS01) && defined(CS00)
+	// this combination is for the standard atmega8
+	sbi(TCCR0, CS01);
+	sbi(TCCR0, CS00);
+#elif defined(TCCR0B) && defined(CS01) && defined(CS00)
+	// this combination is for the standard 168/328/1280/2560
+	sbi(TCCR0B, CS01);
+	sbi(TCCR0B, CS00);
+#elif defined(TCCR0A) && defined(CS01) && defined(CS00)
+	// this combination is for the __AVR_ATmega645__ series
+	sbi(TCCR0A, CS01);
+	sbi(TCCR0A, CS00);
+#else
+	#error Timer 0 prescale factor 64 not set correctly
+#endif
 
-	ulCompareMatch = configCPU_CLOCK_HZ / configTICK_RATE_HZ;
-
-	/* We only have 16 bits so have to scale to get our required tick rate. */
-	ulCompareMatch /= portCLOCK_PRESCALER;
-
-	/* Adjust for correct value. */
-	ulCompareMatch -= ( unsigned long ) 1;
-
-	/* Setup compare match value for compare match A.  Interrupts are disabled 
-	before this is called so we need not worry here. */
-	ucLowByte = ( unsigned char ) ( ulCompareMatch & ( unsigned long ) 0xff );
-	ulCompareMatch >>= 8;
-	ucHighByte = ( unsigned char ) ( ulCompareMatch & ( unsigned long ) 0xff );
-	OCR1AH = ucHighByte;
-	OCR1AL = ucLowByte;
-
-	/* Setup clock source and compare match behaviour. */
-	ucLowByte = portCLEAR_COUNTER_ON_MATCH | portPRESCALE_64;
-	TCCR1B = ucLowByte;
-
-	/* Enable the interrupt - this is okay as interrupt are currently globally
-	disabled. */
-	ucLowByte = TIMSK;
-	ucLowByte |= portCOMPARE_MATCH_A_INTERRUPT_ENABLE;
-	TIMSK = ucLowByte;
+	// enable timer 0 overflow interrupt
+#if defined(TIMSK) && defined(TOIE0)
+	sbi(TIMSK, TOIE0);
+#elif defined(TIMSK0) && defined(TOIE0)
+	sbi(TIMSK0, TOIE0);
+#else
+	#error	Timer 0 overflow interrupt not set correctly
+#endif
 }
 /*-----------------------------------------------------------*/
 
