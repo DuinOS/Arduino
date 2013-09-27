@@ -1,6 +1,6 @@
 
 ARDUINO 1.5.3 BETA
-DUINOS - FreeRTOS 7.4.0 
+DUINOS - FreeRTOS 7.5.2
 
 [ide]
 * Removed useless baud rates from serial monitor
@@ -194,7 +194,7 @@ ARDUINO 1.0.3 - 2012.12.10
 
 [libraries]
 
-* Added 600 baud support in SoftwareSerial (Sébastien Jean)
+* Added 600 baud support in SoftwareSerial (S��bastien Jean)
   (http://github.com/arduino/Arduino/issues/1146)
 
 ARDUINO 1.0.2 - 2012.11.05
@@ -420,7 +420,7 @@ ARDUINO 1.0 - 2011.11.30
   You can still enable verbose output in the preferences dialog. (Icons
   were designed by Nicholas Zambetti.)
 
-* There’s a new color scheme and about image for the IDE (by ToDo.to.it).
+* There���s a new color scheme and about image for the IDE (by ToDo.to.it).
 
 * The name of the currently selected board and serial port are now shown
   at the bottom of the editor. (Code from Wiring.)
@@ -474,11 +474,11 @@ ARDUINO 1.0 - 2011.11.30
 
 * The UDP API has been changed to be more similar to other libraries.
   Outgoing packets are now constructed using calls to the standard write(),
-  print(), and println() functions – bracketed by beginPacket() and
+  print(), and println() functions ��� bracketed by beginPacket() and
   endPacket(). The parsePacket() function checks for and parses an
   incoming packet, which can then be read using available(), read(), and
   peek(). The remoteIP() and remotePort() functions provide information
-  about the packet’s origin. (Again, thanks to Adrian McEwen for the
+  about the packet���s origin. (Again, thanks to Adrian McEwen for the
   implementation.)
 
 * The Wire library has also been modified to use the standard read() and
@@ -514,7 +514,7 @@ ARDUINO 1.0 - 2011.11.30
   size_t (instead of void). This indicates the number of bytes actually
   written by the function. Any classes that inherit from Stream will need
   to change accordingly. Additionally the write(str) function has been
-  given a concrete implementation – it calls write(buf, len) - so
+  given a concrete implementation ��� it calls write(buf, len) - so
   sub-classes don't need to (and shouldn't) implement it.
 
 * There are new abstract base-classes for Client, Server, and UDP to
