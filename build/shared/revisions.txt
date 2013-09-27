@@ -1,5 +1,5 @@
 
-ARDUINO 1.5.3 BETA
+ARDUINO 1.5.4 BETA
 DUINOS - FreeRTOS 7.5.2
 
 [ide]

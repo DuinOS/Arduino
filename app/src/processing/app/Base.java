@@ -53,10 +53,10 @@ import static processing.app.I18n._;
  * files and images, etc) that comes from that.
  */
 public class Base {
-  public static final int REVISION = 153;
+  public static final int REVISION = 154;
   public static final int REVISION_DUINOS = 752;
   /** This might be replaced by main() if there's a lib/version.txt file. */
-  static String VERSION_NAME = "0153";
+  static String VERSION_NAME = "0154";
   static String VERSION_DUINOS_NAME = "0752";
   /** Set true if this a proper release rather than a numbered revision. */
   static public boolean RELEASE = false;
